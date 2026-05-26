@@ -1,0 +1,219 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  role      String   @default("ANALYST")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  tasks         Task[]
+  comments      Comment[]
+  notifications Notification[]
+  accessLogs    AccessLog[]
+  requestedJobs ReportJob[]
+}
+
+model Investor {
+  id          String   @id @default(uuid())
+  name        String
+  institution String?
+  email       String   @unique
+  ticketSize  Float?
+  geography   String?
+  mandate     String?
+  status      String   @default("LEAD")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  documents Document[]
+  dataRoomAccesses DataRoomAccess[]
+}
+
+model Asset {
+  id             String   @id @default(uuid())
+  name           String
+  commodity      String
+  country        String
+  stage          String   @default("SOURCED")
+  capitalNeed    Float?
+  readinessScore Int?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  comments  Comment[]
+  tasks     Task[]
+  documents Document[]
+  dataRooms DataRoom[]
+}
+
+model Document {
+  id         String   @id @default(uuid())
+  name       String
+  storageKey String
+  assetId    String?
+  investorId String?
+  folderId   String?
+  createdAt  DateTime @default(now())
+
+  asset       Asset?            @relation(fields: [assetId], references: [id])
+  investor    Investor?         @relation(fields: [investorId], references: [id])
+  folder      DataRoomFolder?   @relation(fields: [folderId], references: [id])
+  permissions DocumentPermission[]
+}
+
+model ICMemo {
+  id        String   @id @default(uuid())
+  title     String
+  content   String
+  status    String   @default("DRAFT")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  comments Comment[]
+}
+
+model Comment {
+  id        String   @id @default(uuid())
+  body      String
+  userId    String
+  assetId   String?
+  memoId    String?
+  createdAt DateTime @default(now())
+
+  user   User    @relation(fields: [userId], references: [id])
+  asset  Asset?  @relation(fields: [assetId], references: [id])
+  memo   ICMemo? @relation(fields: [memoId], references: [id])
+}
+
+model Task {
+  id         String    @id @default(uuid())
+  title      String
+  status     String    @default("PENDING")
+  dueDate    DateTime?
+  assetId    String?
+  assigneeId String?
+  createdAt  DateTime  @default(now())
+
+  asset    Asset? @relation(fields: [assetId], references: [id])
+  assignee User?  @relation(fields: [assigneeId], references: [id])
+}
+
+model Notification {
+  id        String    @id @default(uuid())
+  title     String
+  body      String?
+  readAt    DateTime?
+  userId    String
+  createdAt DateTime  @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model AccessLog {
+  id           String   @id @default(uuid())
+  userId       String
+  action       String
+  resourceType String
+  resourceId   String
+  createdAt    DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model Report {
+  id         String   @id @default(uuid())
+  title      String
+  reportType String
+  status     String   @default("PENDING")
+  storageKey String?
+  fundId     String?
+  createdAt  DateTime @default(now())
+
+  fund Fund? @relation(fields: [fundId], references: [id])
+}
+
+model Fund {
+  id            String      @id @default(uuid())
+  name          String
+  vintage       Int?
+  targetSizeUsd Float?
+  status        String      @default("FUNDRAISING")
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  dataRooms     DataRoom[]
+  reports       Report[]
+}
+
+model DataRoom {
+  id           String          @id @default(uuid())
+  name         String
+  description  String?
+  assetId      String?
+  fundId       String?
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+
+  asset        Asset?          @relation(fields: [assetId], references: [id])
+  fund         Fund?           @relation(fields: [fundId], references: [id])
+  folders      DataRoomFolder[]
+  accessGrants DataRoomAccess[]
+}
+
+model DataRoomFolder {
+  id         String           @id @default(uuid())
+  name       String
+  dataRoomId String
+  parentId   String?
+  createdAt  DateTime         @default(now())
+  updatedAt  DateTime         @updatedAt
+
+  dataRoom   DataRoom         @relation(fields: [dataRoomId], references: [id])
+  parent     DataRoomFolder?  @relation("FolderParent", fields: [parentId], references: [id])
+  children   DataRoomFolder[] @relation("FolderParent")
+  documents  Document[]
+}
+
+model DataRoomAccess {
+  id          String   @id @default(uuid())
+  investorId  String
+  dataRoomId  String
+  permission  String
+  expiresAt   DateTime?
+  createdAt   DateTime @default(now())
+
+  investor    Investor  @relation(fields: [investorId], references: [id])
+  dataRoom    DataRoom  @relation(fields: [dataRoomId], references: [id])
+}
+
+model DocumentPermission {
+  id             String   @id @default(uuid())
+  documentId     String
+  organizationId String
+  permission     String
+  expiresAt      DateTime?
+  createdAt      DateTime @default(now())
+
+  document Document @relation(fields: [documentId], references: [id])
+}
+
+model ReportJob {
+  id            String   @id @default(uuid())
+  jobType       String
+  targetId      String
+  status        String   @default("QUEUED")
+  downloadUrl   String?
+  requestedById String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  requestedBy User? @relation(fields: [requestedById], references: [id])
+}

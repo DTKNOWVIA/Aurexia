@@ -1,0 +1,64 @@
+declare module "lucide-react" {
+  import type { ComponentType, SVGProps } from "react";
+
+  export type LucideProps = SVGProps<SVGSVGElement> & {
+    size?: number | string;
+    absoluteStrokeWidth?: boolean;
+  };
+
+  export const Activity: ComponentType<LucideProps>;
+  export const AlertCircle: ComponentType<LucideProps>;
+  export const Archive: ComponentType<LucideProps>;
+  export const ArrowRight: ComponentType<LucideProps>;
+  export const BarChart2: ComponentType<LucideProps>;
+  export const BarChart3: ComponentType<LucideProps>;
+  export const Bell: ComponentType<LucideProps>;
+  export const BriefcaseBusiness: ComponentType<LucideProps>;
+  export const Calculator: ComponentType<LucideProps>;
+  export const Calendar: ComponentType<LucideProps>;
+  export const CalendarDays: ComponentType<LucideProps>;
+  export const Check: ComponentType<LucideProps>;
+  export const CheckCheck: ComponentType<LucideProps>;
+  export const CheckCircle2: ComponentType<LucideProps>;
+  export const CheckSquare: ComponentType<LucideProps>;
+  export const ChevronDown: ComponentType<LucideProps>;
+  export const ClipboardList: ComponentType<LucideProps>;
+  export const Clock: ComponentType<LucideProps>;
+  export const Circle: ComponentType<LucideProps>;
+  export const Compass: ComponentType<LucideProps>;
+  export const Copy: ComponentType<LucideProps>;
+  export const DollarSign: ComponentType<LucideProps>;
+  export const Download: ComponentType<LucideProps>;
+  export const Edit2: ComponentType<LucideProps>;
+  export const Eye: ComponentType<LucideProps>;
+  export const File: ComponentType<LucideProps>;
+  export const FileText: ComponentType<LucideProps>;
+  export const Filter: ComponentType<LucideProps>;
+  export const FolderOpen: ComponentType<LucideProps>;
+  export const FolderPlus: ComponentType<LucideProps>;
+  export const GitBranch: ComponentType<LucideProps>;
+  export const Globe2: ComponentType<LucideProps>;
+  export const Landmark: ComponentType<LucideProps>;
+  export const LayoutDashboard: ComponentType<LucideProps>;
+  export const Leaf: ComponentType<LucideProps>;
+  export const LockKeyhole: ComponentType<LucideProps>;
+  export const LogOut: ComponentType<LucideProps>;
+  export const Mail: ComponentType<LucideProps>;
+  export const MapPin: ComponentType<LucideProps>;
+  export const MessageSquare: ComponentType<LucideProps>;
+  export const Phone: ComponentType<LucideProps>;
+  export const PhoneCall: ComponentType<LucideProps>;
+  export const Pickaxe: ComponentType<LucideProps>;
+  export const PieChart: ComponentType<LucideProps>;
+  export const Plus: ComponentType<LucideProps>;
+  export const Search: ComponentType<LucideProps>;
+  export const Send: ComponentType<LucideProps>;
+  export const Shield: ComponentType<LucideProps>;
+  export const ShieldCheck: ComponentType<LucideProps>;
+  export const Trash2: ComponentType<LucideProps>;
+  export const TrendingUp: ComponentType<LucideProps>;
+  export const Upload: ComponentType<LucideProps>;
+  export const UserCircle: ComponentType<LucideProps>;
+  export const Users: ComponentType<LucideProps>;
+  export const X: ComponentType<LucideProps>;
+}

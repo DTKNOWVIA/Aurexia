@@ -1,0 +1,1398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aurexia — From Ore to Institutional Returns</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Syne:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --black:#0A0A0A;--surface:#111;--card:#181818;--card2:#1E1E1E;
+  --border:#252525;--border2:#2E2E2E;
+  --blue:#2F80ED;--blue-dim:rgba(47,128,237,0.12);
+  --bronze:#C47A2C;--bronze-dim:rgba(196,122,44,0.12);
+  --emerald:#27AE60;--emerald-dim:rgba(39,174,96,0.12);
+  --gold:#E8B84B;--gold-dim:rgba(232,184,75,0.1);
+  --red:#E24B4A;
+  --text:#F0EDE8;--muted:#777;--faint:#383838; 
+  --font-d:'DM Serif Display',serif;--font-u:'Syne',sans-serif;
+}
+html{scroll-behavior:smooth}
+body{background:var(--black);color:var(--text);font-family:var(--font-u);font-size:14px;line-height:1.6;min-height:100vh;overflow-x:hidden}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:var(--surface)}
+::-webkit-scrollbar-thumb{background:var(--faint);border-radius:2px}
+
+/* ── NAV ── */
+#nav{display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:54px;background:rgba(10,10,10,0.96);border-bottom:1px solid var(--border);position:fixed;top:0;left:0;right:0;z-index:200;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.logo{font-family:var(--font-d);font-size:19px;color:var(--gold);letter-spacing:0.03em;cursor:pointer}
+.nav-links{display:flex;gap:1.8rem;align-items:center}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:12px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;transition:color .2s;padding:4px 0;border-bottom:1px solid transparent}
+.nav-links a:hover{color:var(--text)}
+.nav-links a.on{color:var(--text);border-bottom-color:var(--gold)}
+.nav-cta{background:var(--blue);color:#fff;border:none;padding:8px 16px;border-radius:2px;font-family:var(--font-u);font-size:11px;font-weight:700;letter-spacing:0.1em;cursor:pointer;text-transform:uppercase;transition:opacity .2s}
+.nav-cta:hover{opacity:0.85}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:8px;border-radius:4px;transition:background .2s}
+.hamburger:hover{background:rgba(255,255,255,0.05)}
+.hamburger span{width:22px;height:2px;background:var(--text);border-radius:1px;transition:.3s}
+.hamburger.active span:nth-child(1){transform:rotate(45deg) translate(5px,5px)}
+.hamburger.active span:nth-child(2){opacity:0}
+.hamburger.active span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px)}
+
+/* ── PAGES ── */
+.pg{display:none;padding-top:54px;min-height:100vh;animation:fadeUp .35s ease}
+.pg.on{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── MOBILE NAV OVERLAY ── */
+.nav-links.mobile-open{display:flex;flex-direction:column;position:fixed;top:54px;left:0;right:0;background:rgba(10,10,10,0.98);border-bottom:1px solid var(--border);padding:1.5rem 2rem;gap:0.5rem;z-index:199;max-height:calc(100vh - 54px);overflow-y:auto;animation:slideDown .25s ease}
+@keyframes slideDown{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+
+.sidebar-overlay{display:none;position:fixed;top:54px;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:149}
+.sidebar-overlay.active{display:block}
+
+/* ── SHARED ── */
+.wrap{max-width:1200px;margin:0 auto;padding:0 2rem}
+.tag{font-size:10px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--bronze);margin-bottom:.8rem}
+.h1{font-family:var(--font-d);font-size:clamp(2.6rem,5vw,4.5rem);line-height:1.05;margin-bottom:1.2rem}
+.h1 em{color:var(--gold);font-style:italic}
+.h2{font-family:var(--font-d);font-size:clamp(1.5rem,3vw,2rem);margin-bottom:.8rem}
+.lead{color:var(--muted);font-size:15px;line-height:1.8;max-width:560px;margin-bottom:2rem}
+.sec{padding:3.5rem 0}
+.sec+.sec{border-top:1px solid var(--border)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem}
+.card{background:var(--card);border:1px solid var(--border);border-radius:3px;padding:1.4rem}
+.card2{background:var(--card2);border:1px solid var(--border2);border-radius:3px;padding:1.2rem}
+btn,.btn{display:inline-block;border:none;padding:11px 24px;border-radius:2px;font-family:var(--font-u);font-size:12px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;transition:opacity .2s}
+.btn-p{background:var(--blue);color:#fff}
+.btn-o{background:transparent;color:var(--text);border:1px solid var(--border2)}
+.btn-p:hover,.btn-o:hover{opacity:.8}
+.btn-sm{padding:7px 14px;font-size:11px}
+
+/* badges */
+.badge{display:inline-block;font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:3px 8px;border-radius:2px}
+.b-gray{background:rgba(80,80,80,.3);color:#888}
+.b-bronze{background:var(--bronze-dim);color:var(--bronze)}
+.b-blue{background:var(--blue-dim);color:var(--blue)}
+.b-gold{background:var(--gold-dim);color:var(--gold)}
+.b-green{background:var(--emerald-dim);color:var(--emerald)}
+.b-red{background:rgba(226,75,74,.12);color:var(--red)}
+
+/* metric cards */
+.mcard{background:var(--card);border:1px solid var(--border);border-radius:3px;padding:1.2rem 1.4rem}
+.mcard .lbl{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:.5rem}
+.mcard .val{font-family:var(--font-d);font-size:2rem;color:var(--text)}
+.mcard .sub{font-size:11px;color:var(--emerald);margin-top:.3rem}
+.mcard .sub.r{color:var(--red)}
+
+/* tables */
+.tbl{width:100%;border-collapse:collapse}
+.tbl th{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);padding:9px 10px;text-align:left;border-bottom:1px solid var(--border);white-space:nowrap}
+.tbl td{padding:11px 10px;border-bottom:1px solid rgba(37,37,37,.6);font-size:13px;color:var(--muted);vertical-align:middle}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tbody tr:hover td{background:rgba(255,255,255,.02);cursor:pointer}
+.tbl .em{color:var(--text);font-weight:600}
+.tbl-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:3px}
+
+/* score bars */
+.sbar{width:56px;height:4px;background:var(--faint);border-radius:2px;overflow:hidden;display:inline-block}
+.sfill{height:100%;border-radius:2px}
+
+/* progress bars */
+.pbar{height:5px;background:var(--faint);border-radius:3px;overflow:hidden;flex:1}
+.pfill{height:100%;border-radius:3px;background:var(--blue);transition:width .7s ease}
+
+/* forms */
+.fgroup{display:flex;flex-direction:column;gap:6px;margin-bottom:1rem}
+.fgroup.full{grid-column:1/-1}
+.flabel{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.finput{background:var(--card);border:1px solid var(--border);border-radius:2px;padding:10px 12px;color:var(--text);font-family:var(--font-u);font-size:13px;outline:none;transition:border-color .2s;width:100%}
+.finput:focus{border-color:var(--blue)}
+select.finput{-webkit-appearance:none;cursor:pointer}
+textarea.finput{resize:vertical;min-height:100px}
+
+/* divider */
+.divider{border:none;border-top:1px solid var(--border);margin:0}
+
+/* ══════════════════════════════════════
+   HOME PAGE
+══════════════════════════════════════ */
+.hero{padding:4.5rem 0 3.5rem}
+.hero-inner{display:grid;grid-template-columns:1fr 420px;gap:3rem;align-items:start}
+.hero-stats{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:3px;overflow:hidden;margin-top:1.5rem}
+.hero-stat{background:var(--card);padding:1.2rem 1.4rem}
+.hero-stat .big{font-family:var(--font-d);font-size:2.2rem;color:var(--gold)}
+.hero-stat .sm{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-top:3px}
+.hero-right{background:var(--card);border:1px solid var(--border);border-radius:3px;padding:1.6rem;position:sticky;top:74px}
+.hero-right .rtag{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem}
+.flow-step{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)}
+.flow-step:last-child{border-bottom:none}
+.flow-num{width:24px;height:24px;border-radius:50%;background:var(--blue-dim);color:var(--blue);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.flow-text{font-size:13px;color:var(--text);font-weight:500}
+.flow-sub{font-size:11px;color:var(--muted)}
+.commodities{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:3px;overflow:hidden;margin-top:1.5rem}
+.comm{background:var(--card);padding:1.1rem .8rem;text-align:center}
+.comm .cn{font-family:var(--font-d);font-size:.95rem;margin-bottom:4px}
+.comm .cs{font-size:10px;color:var(--muted);letter-spacing:.06em}
+.why-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:3px;overflow:hidden;margin-top:1.5rem}
+.why-box{background:var(--card);padding:1.5rem}
+.why-icon{font-size:18px;margin-bottom:.8rem}
+.why-box h3{font-size:13px;font-weight:700;margin-bottom:.5rem;letter-spacing:.02em}
+.why-box p{font-size:12px;color:var(--muted);line-height:1.7}
+.return-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:3px;overflow:hidden;margin-top:1.5rem}
+.rstep{background:var(--card);padding:1.2rem;position:relative}
+.rstep:not(:last-child)::after{content:'→';position:absolute;right:-8px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:11px;z-index:1}
+.rstep .rn{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--bronze);margin-bottom:.5rem}
+.rstep .rt{font-size:13px;font-weight:600;margin-bottom:.4rem}
+.rstep .rs{font-size:12px;color:var(--muted)}
+.cta-band{background:var(--card);border:1px solid var(--border);border-radius:3px;padding:2.5rem;display:flex;align-items:center;justify-content:space-between;margin-top:1.5rem;gap:2rem}
+.cta-band h2{font-family:var(--font-d);font-size:1.6rem;margin-bottom:.4rem}
+.cta-band p{color:var(--muted);font-size:14px}
+.cta-btns{display:flex;gap:.8rem;flex-shrink:0}
+
+/* ══════════════════════════════════════
+   STRATEGY PAGE
+══════════════════════════════════════ */
+.engine-row{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:3px;overflow:hidden;margin-top:1.5rem;margin-bottom:2rem}
+.eng{background:var(--card);padding:1.1rem;text-align:center;position:relative}
+.eng:not(:last-child)::after{content:'›';position:absolute;right:0;top:50%;transform:translateY(-50%);color:var(--muted);font-size:14px;z-index:1}
+.eng .en{font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--bronze);margin-bottom:5px}
+.eng .et{font-size:12px;font-weight:600;color:var(--text);line-height:1.3}
+.compare-table{width:100%;border-collapse:collapse;margin-top:1.5rem}
+.compare-table th{background:var(--card2);padding:10px 14px;text-align:left;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);border:1px solid var(--border)}
+.compare-table td{padding:10px 14px;border:1px solid var(--border);font-size:13px;color:var(--muted)}
+.compare-table td:first-child{color:var(--text);font-weight:500;background:rgba(255,255,255,.01)}
+.compare-table td.good{color:var(--emerald)}
+.compare-table tr:nth-child(even) td{background:rgba(255,255,255,.015)}
+
+/* ══════════════════════════════════════
+   PIPELINE PAGE
+══════════════════════════════════════ */
+.pipeline-header{display:flex;align-items:flex-end;justify-content:space-between;padding:2rem 0 1.5rem}
+.stage-funnel{display:grid;grid-template-columns:repeat(6,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:3px;overflow:hidden;margin-bottom:1.5rem}
+.sfstage{background:var(--card);padding:.9rem 1rem;text-align:center}
+.sfstage .sfn{font-family:var(--font-d);font-size:1.6rem}
+.sfstage .sfl{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-top:3px}
+.filters{display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:1.2rem}
+.fbtn{background:transparent;border:1px solid var(--border);color:var(--muted);padding:5px 13px;border-radius:20px;font-family:var(--font-u);font-size:11px;font-weight:600;cursor:pointer;transition:all .2s;letter-spacing:.04em}
+.fbtn.on,.fbtn:hover{border-color:var(--bronze);color:var(--bronze)}
+.map-countries{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:1.5rem}
+.mcountry{background:var(--card);border:1px solid var(--border);border-radius:3px;padding:.8rem 1.2rem;font-size:13px;cursor:pointer;transition:border-color .2s;display:flex;align-items:center;gap:.6rem}
+.mcountry:hover{border-color:var(--blue)}
+.mcountry .mn{font-weight:600;color:var(--text)}
+.mcountry .mc{font-size:12px;color:var(--muted)}
+
+/* ══════════════════════════════════════
+   PLATFORM (INTERNAL OS)
+══════════════════════════════════════ */
+#pg-platform{padding-top:54px}
+.dash-wrap{display:grid;grid-template-columns:220px 1fr;min-height:calc(100vh - 54px)}
+.sidebar{background:var(--surface);border-right:1px solid var(--border);padding:0;overflow-y:auto;position:sticky;top:54px;height:calc(100vh - 54px)}
+.sb-user{padding:1.2rem 1.2rem 1rem;border-bottom:1px solid var(--border)}
+.sb-user .sbu-name{font-size:13px;font-weight:600;color:var(--text);margin-bottom:2px}
+.sb-user .sbu-role{font-size:11px;color:var(--bronze)}
+.sb-section{font-size:9px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);padding:12px 1.2rem 5px}
+.sb-item{display:flex;align-items:center;gap:9px;padding:8px 1.2rem;color:var(--muted);cursor:pointer;font-size:13px;font-weight:500;transition:all .15s;border-left:2px solid transparent}
+.sb-item:hover{color:var(--text);background:rgba(255,255,255,.03)}
+.sb-item.on{color:var(--text);background:rgba(47,128,237,.08);border-left-color:var(--blue)}
+.sb-icon{width:15px;font-size:13px;text-align:center;flex-shrink:0}
+.dash-main{padding:1.8rem;overflow-y:auto;min-width:0}
+.dash-view{display:none}
+.dash-view.on{display:block;animation:fadeUp .25s ease}
+.dh{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem}
+.dh h2{font-family:var(--font-d);font-size:1.4rem}
+.dh .dh-sub{font-size:12px;color:var(--muted)}
+
+/* IC workflow */
+.ic-track{display:flex;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:3px;overflow:hidden;margin-bottom:1.5rem}
+.ic-step{flex:1;background:var(--card);padding:.9rem;text-align:center}
+.ic-step .isn{font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
+.ic-step .ist{font-size:12px;font-weight:600;color:var(--muted)}
+.ic-step.done .ist{color:var(--emerald)}
+.ic-step.now .ist{color:var(--gold)}
+.vote-item{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(37,37,37,.7)}
+.vote-item:last-child{border-bottom:none}
+.vi-name{font-size:13px;color:var(--text);font-weight:500}
+.vi-role{font-size:11px;color:var(--muted);margin-top:2px}
+
+/* activity */
+.act-item{display:flex;gap:10px;margin-bottom:12px}
+.act-dot{width:8px;height:8px;border-radius:50%;margin-top:4px;flex-shrink:0}
+.act-text{font-size:12px;color:var(--muted);line-height:1.6}
+.act-text strong{color:var(--text)}
+.act-time{font-size:10px;color:var(--faint);margin-top:2px}
+
+/* funnel */
+.frow{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.fl{font-size:12px;color:var(--muted);width:88px;flex-shrink:0}
+.fc{font-size:12px;color:var(--text);width:24px;text-align:right}
+
+/* capital stack */
+.cstack-bar{margin-bottom:.9rem}
+.csb-head{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:4px}
+.csb-track{height:8px;background:var(--faint);border-radius:2px;overflow:hidden}
+.csb-fill{height:100%;border-radius:2px;transition:width .7s ease}
+
+/* ══════════════════════════════════════
+   LP PORTAL
+══════════════════════════════════════ */
+.lp-banner{background:var(--card);border:1px solid var(--border);border-radius:3px;padding:2rem 2.5rem;display:flex;justify-content:space-between;align-items:center;gap:2rem;margin-bottom:1.5rem}
+.lp-banner h2{font-family:var(--font-d);font-size:1.4rem;margin-bottom:.3rem}
+.lp-banner p{font-size:13px;color:var(--muted)}
+.lp-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:3px;overflow:hidden;margin-bottom:1.5rem}
+.lp-kpi{background:var(--card);padding:1.4rem;text-align:center}
+.lp-kpi .lkv{font-family:var(--font-d);font-size:2.2rem;color:var(--gold);margin:.5rem 0}
+.lp-kpi .lkl{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.lp-kpi .lks{font-size:12px;color:var(--emerald);margin-top:.3rem}
+.doc-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid rgba(37,37,37,.6)}
+.doc-row:last-child{border-bottom:none}
+.doc-ico{width:30px;height:30px;background:var(--blue-dim);border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--blue);flex-shrink:0}
+.doc-name{font-size:13px;color:var(--text);font-weight:500}
+.doc-meta{font-size:11px;color:var(--muted);margin-top:2px}
+.doc-dl{font-size:11px;color:var(--blue);cursor:pointer;border:1px solid rgba(47,128,237,.3);padding:4px 10px;border-radius:2px;background:transparent;font-family:var(--font-u);font-weight:600;flex-shrink:0;transition:background .2s}
+.doc-dl:hover{background:var(--blue-dim)}
+
+/* ══════════════════════════════════════
+   ESG PAGE
+══════════════════════════════════════ */
+.esg-scores{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:3px;overflow:hidden;margin-bottom:1.5rem}
+.esg-s{background:var(--card);padding:1.4rem;text-align:center}
+.esg-val{font-family:var(--font-d);font-size:3rem;margin:.5rem 0}
+.esg-lbl{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.action-item{display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-bottom:1px solid rgba(37,37,37,.6)}
+.action-item:last-child{border-bottom:none}
+.ai-name{font-size:13px;color:var(--text);font-weight:500}
+.ai-meta{font-size:11px;color:var(--muted);margin-top:2px}
+
+/* ══════════════════════════════════════
+   SUBMIT PROJECT
+══════════════════════════════════════ */
+.submit-wrap{max-width:720px;padding-bottom:3rem}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+
+/* ══════════════════════════════════════
+   TEAM PAGE
+══════════════════════════════════════ */
+.team-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:1.5rem}
+.team-card{background:var(--card);border:1px solid var(--border);border-radius:3px;padding:1.4rem}
+.tc-avatar{width:48px;height:48px;border-radius:50%;background:var(--blue-dim);color:var(--blue);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;margin-bottom:1rem}
+.tc-name{font-size:14px;font-weight:700;margin-bottom:3px}
+.tc-role{font-size:11px;color:var(--bronze);font-weight:600;letter-spacing:.04em;margin-bottom:.7rem;text-transform:uppercase}
+.tc-bio{font-size:12px;color:var(--muted);line-height:1.7}
+
+/* ══════════════════════════════════════
+   TOAST
+══════════════════════════════════════ */
+#toast{position:fixed;bottom:2rem;right:2rem;background:var(--card2);border:1px solid var(--emerald);color:var(--emerald);padding:.9rem 1.4rem;border-radius:3px;font-size:13px;font-weight:600;transform:translateY(80px);opacity:0;transition:all .4s;z-index:999;pointer-events:none}
+#toast.show{transform:translateY(0);opacity:1}
+
+/* ══════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════ */
+@media(max-width:900px){
+  .nav-links{display:none}
+  .hamburger{display:flex}
+  .hero-inner{grid-template-columns:1fr}
+  .hero-right{position:static;margin-top:1.5rem}
+  .dash-wrap{grid-template-columns:1fr}
+  .sidebar{position:fixed;left:-100%;top:54px;z-index:150;transition:left .3s ease;width:80%;max-width:300px;height:calc(100vh - 54px);background:var(--surface);border-right:1px solid var(--border);box-shadow:4px 0 12px rgba(0,0,0,0.3)}
+  .sidebar.open{left:0}
+  .sidebar-overlay{display:none;position:fixed;top:54px;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:149}
+  .sidebar-overlay.active{display:block}
+  .why-grid,.return-steps{grid-template-columns:1fr 1fr}
+  .engine-row{grid-template-columns:1fr}
+  .grid4{grid-template-columns:1fr 1fr}
+  .grid3{grid-template-columns:1fr 1fr}
+  .commodities{grid-template-columns:1fr 1fr}
+  .stage-funnel{grid-template-columns:repeat(3,1fr)}
+  .lp-banner{flex-direction:column;align-items:flex-start}
+  .lp-kpis{grid-template-columns:1fr}
+  .esg-scores{grid-template-columns:1fr}
+  .team-grid{grid-template-columns:1fr 1fr}
+  .form-grid{grid-template-columns:1fr}
+  .cta-band{flex-direction:column;align-items:flex-start}
+  .wrap{padding:0 1.2rem}
+  .hero{padding:3rem 0 2.5rem}
+  .sec{padding:2.5rem 0}
+  .card,.card2{padding:1.2rem}
+  .btn{padding:10px 20px;font-size:11px}
+  .nav-cta{padding:6px 12px;font-size:10px}
+  .h2{font-size:clamp(1.3rem,3vw,1.8rem)}
+  .lead{font-size:14px}
+  .tbl{font-size:12px}
+  .tbl th,.tbl td{padding:8px 6px}
+  .mcard .val{font-size:1.6rem}
+  .hero-stat .big{font-size:1.8rem}
+  .esg-val{font-size:2.2rem}
+  .lp-kpi .lkv{font-size:1.8rem}
+  .flow-num{width:22px;height:22px;font-size:10px}
+  .flow-text{font-size:12px}
+  .flow-sub{font-size:10px}
+  .sb-item{font-size:12px}
+  .dh h2{font-size:1.2rem}
+  .act-text{font-size:11px}
+  .doc-row{padding:8px 0}
+  .doc-ico{width:26px;height:26px;font-size:11px}
+  .doc-name{font-size:12px}
+  .doc-meta{font-size:10px}
+  .doc-dl{font-size:10px;padding:3px 8px}
+  .finput{font-size:12px;padding:9px 10px}
+  .flabel{font-size:9px}
+  .tc-bio{font-size:11px}
+  .team-card{padding:1.2rem}
+  .tc-avatar{width:42px;height:42px;font-size:13px}
+  .tc-name{font-size:13px}
+  .tc-role{font-size:10px}
+  .mcountry{padding:0.6rem 1rem}
+  .mcountry .mn{font-size:12px}
+  .mcountry .mc{font-size:11px}
+  .rstep .rt{font-size:12px}
+  .rstep .rs{font-size:11px}
+  .rstep .rn{font-size:9px}
+  .why-box{padding:1.2rem}
+  .why-box h3{font-size:12px}
+  .why-box p{font-size:11px}
+  .why-icon{font-size:16px}
+  .comm .cn{font-size:.85rem}
+  .comm .cs{font-size:9px}
+  .eng .et{font-size:11px}
+  .eng .en{font-size:8px}
+  .sfstage .sfn{font-size:1.3rem}
+  .sfstage .sfl{font-size:9px}
+  .pipeline-header{align-items:flex-start}
+  .pipeline-header .btn{margin-top:0.5rem}
+  .fbtn{font-size:10px;padding:4px 10px}
+  .tbl-wrap{margin:0 -1.2rem}
+  .b-badge{font-size:9px;padding:2px 6px}
+  .sbar{width:48px}
+  .pbar{height:4px}
+  .cstack-bar{margin-bottom:0.7rem}
+  .csb-head{font-size:10px}
+  .csb-track{height:6px}
+  .act-item{margin-bottom:10px}
+  .act-dot{width:6px;height:6px}
+  .act-text{font-size:11px}
+  .act-time{font-size:9px}
+  .frow{margin-bottom:6px}
+  .fl{font-size:11px;width:80px}
+  .fc{font-size:11px}
+  .vote-item{padding:8px 0}
+  .vi-name{font-size:12px}
+  .vi-role{font-size:10px}
+  .ai-name{font-size:12px}
+  .ai-meta{font-size:10px}
+  .doc-row{margin-bottom:0.5rem}
+  .doc-row:last-child{margin-bottom:0}
+  .mcard .lbl{font-size:9px}
+  .mcard .sub{font-size:10px}
+  .tag{font-size:9px;margin-bottom:0.6rem}
+  .h1{font-size:clamp(2rem,5vw,3rem);margin-bottom:1rem}
+  .h2{font-size:clamp(1.3rem,3vw,1.8rem);margin-bottom:0.6rem}
+  .btn{padding:9px 18px}
+  .nav-links a{font-size:11px;gap:1.2rem}
+  .nav-cta{padding:6px 12px;font-size:10px}
+}
+@media(max-width:600px){
+  .grid2,.grid3,.grid4{grid-template-columns:1fr}
+  .wrap{padding:0 1rem}
+  .why-grid,.return-steps,.engine-row,.commodities,.stage-funnel{grid-template-columns:1fr}
+  .team-grid{grid-template-columns:1fr}
+  .hero-stats{grid-template-columns:1fr 1fr}
+  .hero-stat{padding:1rem}
+  .hero-stat .big{font-size:1.6rem}
+  .hero-stat .sm{font-size:9px}
+  .flow-step{padding:8px 0}
+  .rstep{padding:1rem}
+  .rstep:not(:last-child)::after{right:-6px;font-size:10px}
+  .cta-band{padding:1.5rem}
+  .cta-band h2{font-size:1.3rem}
+  .cta-btns{flex-direction:column;width:100%}
+  .cta-btns .btn{width:100%;text-align:center}
+  .mcard{padding:1rem}
+  .mcard .val{font-size:1.4rem}
+  .esg-val{font-size:1.8rem}
+  .lp-kpi .lkv{font-size:1.6rem}
+  .doc-row{flex-wrap:wrap}
+  .doc-dl{margin-top:0.3rem}
+  .fgroup{margin-bottom:0.8rem}
+  .submit-wrap{padding-bottom:2rem}
+  .sb-section{font-size:8px;padding:10px 1rem 4px}
+  .sb-item{padding:7px 1rem;font-size:11px}
+  .sb-user{padding:1rem}
+  .sbu-name{font-size:12px}
+  .sbu-role{font-size:10px}
+  .dh .dh-sub{font-size:11px}
+  .pipeline-header{flex-direction:column;gap:1rem}
+  .pipeline-header .btn{width:100%}
+  .tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .tbl{min-width:600px}
+  .ic-track{flex-wrap:wrap}
+  .ic-step{min-width:120px}
+  .vote-item{flex-wrap:wrap;gap:0.5rem}
+  .vote-item .badge{margin-top:0.3rem}
+  .map-countries{gap:0.5rem}
+  .mcountry{width:calc(50% - 0.25rem);box-sizing:border-box}
+  .why-grid .why-box{margin-bottom:0.5rem}
+  .return-steps .rstep{padding:0.8rem}
+  .return-steps .rstep:not(:last-child)::after{right:-6px;font-size:10px}
+  .engine-row .eng{margin-bottom:0.5rem}
+  .engine-row .eng:not(:last-child)::after{display:none}
+  .engine-row{grid-template-columns:1fr 1fr}
+  .engine-row .eng:last-child{margin-bottom:0}
+  .grid2{grid-gap:0.8rem}
+  .grid3{grid-gap:0.8rem}
+  .grid4{grid-gap:0.8rem}
+  .card2{padding:1rem}
+  .card2 .tag{margin-top:0.5rem}
+  .card2 .tag:first-child{margin-top:0}
+  .card .tag{margin-top:0.5rem}
+  .card .tag:first-child{margin-top:0}
+  .fgroup.full textarea{min-height:80px}
+  .btn-sm{padding:6px 12px;font-size:10px}
+  .badge{font-size:8px;padding:2px 6px}
+  .b-gray,.b-bronze,.b-blue,.b-gold,.b-green,.b-red{opacity:0.9}
+  .tbl-wrap{border-radius:2px}
+  .card,.card2{border-radius:2px}
+  .btn{border-radius:2px}
+  .finput{border-radius:2px}
+  .nav-cta{border-radius:2px}
+  .doc-dl{border-radius:2px}
+  .badge{border-radius:2px}
+  .sbar,.pbar,.csb-track{border-radius:1px}
+  .flow-num{border-radius:50%}
+  .tc-avatar{border-radius:50%}
+  .doc-ico{border-radius:2px}
+  .mcountry{border-radius:2px}
+  .sfill,.pfill,.csb-fill{border-radius:1px}
+  .hamburger span{border-radius:1px}
+  /* Prevent horizontal scroll */
+  body{overflow-x:hidden}
+  .wrap{overflow-x:hidden}
+  .tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .card{overflow:hidden}
+  .card2{overflow:hidden}
+  .nav-links.mobile-open{overflow-y:auto;-webkit-overflow-scrolling:touch}
+  /* Touch-friendly tap targets */
+  .hamburger{min-height:44px;min-width:44px;display:flex;align-items:center;justify-content:center}
+  .nav-cta{min-height:36px}
+  .btn{min-height:40px}
+  .sb-item{min-height:40px;display:flex;align-items:center}
+  .doc-dl{min-height:28px;display:inline-flex;align-items:center}
+  .finput{min-height:40px}
+  .mcountry{min-height:44px}
+  .fbtn{min-height:28px;display:inline-flex;align-items:center}
+  .sfstage{min-height:60px}
+  .mcard{min-height:100px}
+  .why-box{min-height:140px}
+  .rstep{min-height:100px}
+  .eng{min-height:80px}
+  .team-card{min-height:280px}
+  .vote-item{min-height:50px}
+  .action-item{min-height:50px}
+  .doc-row{min-height:50px}
+  .flow-step{min-height:50px}
+}
+</style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav id="nav">
+  <span class="logo" onclick="nav('home')">AUREXIA</span>
+  <div class="nav-links" id="navlinks">
+    <a onclick="nav('home')" id="nl-home" class="on">Overview</a>
+    <a onclick="nav('strategy')" id="nl-strategy">Strategy</a>
+    <a onclick="nav('pipeline')" id="nl-pipeline">Pipeline</a>
+    <a onclick="nav('esg')" id="nl-esg">ESG</a>
+    <a onclick="nav('team')" id="nl-team">Team</a>
+    <a onclick="nav('platform')" id="nl-platform">Platform</a>
+    <a onclick="nav('lp')" id="nl-lp">LP Portal</a>
+    <a onclick="nav('submit')" id="nl-submit">Submit Project</a>
+  </div>
+  <div style="display:flex;gap:.8rem;align-items:center">
+    <button class="nav-cta" onclick="nav('lp')">Investor Access</button>
+    <div class="hamburger" id="hbg" onclick="toggleMobile()"><span></span><span></span><span></span></div>
+  </div>
+</nav>
+
+<!-- ════════════════════════════════════
+     HOME
+════════════════════════════════════ -->
+<div class="pg on" id="pg-home">
+  <div class="wrap">
+    <!-- HERO -->
+    <div class="hero">
+      <div class="hero-inner">
+        <div>
+          <div class="tag">Southern Africa · Critical Minerals · Institutional Capital</div>
+          <h1 class="h1">From <em>Ore</em><br>to Institutional<br>Returns</h1>
+          <p class="lead">Aurexia is a digitally-enabled capital platform that originates, structures, and exits critical mineral investments across Southern Africa — aligned with global energy transition demand.</p>
+          <div style="display:flex;gap:.8rem;flex-wrap:wrap">
+            <button class="btn btn-p" onclick="nav('lp')">Request Investor Access</button>
+            <button class="btn btn-o" onclick="nav('platform')">Explore Platform</button>
+          </div>
+          <div class="hero-stats">
+            <div class="hero-stat"><div class="big">$300M</div><div class="sm">Target Fund Size</div></div>
+            <div class="hero-stat"><div class="big">200+</div><div class="sm">Pipeline Assets</div></div>
+            <div class="hero-stat"><div class="big">18–22%</div><div class="sm">Target IRR</div></div>
+            <div class="hero-stat"><div class="big">8–12</div><div class="sm">Portfolio Assets</div></div>
+          </div>
+        </div>
+        <div class="hero-right">
+          <div class="rtag">LP Journey — How It Works</div>
+          <div class="flow-step">
+            <div class="flow-num">1</div>
+            <div><div class="flow-text">Discover Aurexia</div><div class="flow-sub">Public website · strategy · pipeline</div></div>
+          </div>
+          <div class="flow-step">
+            <div class="flow-num">2</div>
+            <div><div class="flow-text">Request Investor Access</div><div class="flow-sub">Intake form · investor profile created</div></div>
+          </div>
+          <div class="flow-step">
+            <div class="flow-num">3</div>
+            <div><div class="flow-text">NDA &amp; Microsite</div><div class="flow-sub">Investment memo · fund model · pipeline</div></div>
+          </div>
+          <div class="flow-step">
+            <div class="flow-num">4</div>
+            <div><div class="flow-text">Due Diligence</div><div class="flow-sub">Data room · Q&amp;A · IC materials</div></div>
+          </div>
+          <div class="flow-step">
+            <div class="flow-num">5</div>
+            <div><div class="flow-text">Capital Commitment</div><div class="flow-sub">Subscription · KYC · onboarding</div></div>
+          </div>
+          <div class="flow-step" style="border-bottom:none">
+            <div class="flow-num" style="background:var(--emerald-dim);color:var(--emerald)">✓</div>
+            <div><div class="flow-text">LP Portal Access</div><div class="flow-sub">Performance · reports · distributions</div></div>
+          </div>
+          <button class="btn btn-p" style="width:100%;margin-top:1.2rem;text-align:center" onclick="nav('lp')">Access LP Portal →</button>
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- WHY AUREXIA -->
+    <div class="sec">
+      <div class="tag">Why Aurexia</div>
+      <h2 class="h2">A New Model for Mining Investment</h2>
+      <p class="lead">Africa does not lack mineral assets. It lacks structured capital, governance, and exit pathways. Aurexia solves all three.</p>
+      <div class="why-grid">
+        <div class="why-box">
+          <div class="why-icon" style="color:var(--blue)">◈</div>
+          <h3>Proprietary Pipeline</h3>
+          <p>200+ sourced assets across Lithium, Nickel, Manganese, Vanadium, and Graphite with direct government and operator relationships.</p>
+        </div>
+        <div class="why-box">
+          <div class="why-icon" style="color:var(--bronze)">⬡</div>
+          <h3>Structured Capital</h3>
+          <p>Equity, structured debt, and offtake-linked capital combined into layered stacks that optimise risk-adjusted returns.</p>
+        </div>
+        <div class="why-box">
+          <div class="why-icon" style="color:var(--emerald)">▲</div>
+          <h3>Active Transformation</h3>
+          <p>We invest and transform — governance overhaul, operational optimisation, and institutional ESG at every asset.</p>
+        </div>
+        <div class="why-box">
+          <div class="why-icon" style="color:var(--gold)">◉</div>
+          <h3>Exit-First Model</h3>
+          <p>Entry at 3–4x EBITDA. Exit to mining majors, EV supply chains, and sovereign funds at 5–7x EBITDA multiples.</p>
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- RETURN PATH -->
+    <div class="sec">
+      <div class="tag">Return Generation</div>
+      <h2 class="h2">A Disciplined Path to 20%+ Returns</h2>
+      <div class="return-steps">
+        <div class="rstep"><div class="rn">Entry</div><div class="rt">Discounted Acquisition</div><div class="rs">3–4x EBITDA · distressed or undercapitalised</div></div>
+        <div class="rstep"><div class="rn">Transformation</div><div class="rt">Governance &amp; Operations</div><div class="rs">Reporting, cost discipline, ESG, production ramp</div></div>
+        <div class="rstep"><div class="rn">Cash Yield</div><div class="rt">Structured Capital Returns</div><div class="rs">Debt yield + offtake-linked distributions</div></div>
+        <div class="rstep"><div class="rn">Exit</div><div class="rt">Institutional Multiple</div><div class="rs">5–7x EBITDA to majors, sovereign funds, EV players</div></div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- COMMODITIES -->
+    <div class="sec">
+      <div class="tag">Focus Commodities</div>
+      <h2 class="h2">The Minerals Powering the Energy Transition</h2>
+      <div class="commodities">
+        <div class="comm"><div class="cn" style="color:var(--blue)">Lithium</div><div class="cs">EV Batteries</div></div>
+        <div class="comm"><div class="cn" style="color:var(--bronze)">Nickel</div><div class="cs">Battery Cathodes</div></div>
+        <div class="comm"><div class="cn" style="color:var(--gold)">Manganese</div><div class="cs">Steel &amp; Batteries</div></div>
+        <div class="comm"><div class="cn" style="color:var(--emerald)">Vanadium</div><div class="cs">Grid Storage</div></div>
+        <div class="comm"><div class="cn" style="color:var(--muted)">Graphite</div><div class="cs">Anodes</div></div>
+      </div>
+    </div>
+
+    <!-- CTA BAND -->
+    <div class="cta-band">
+      <div><h2>Institutional Access to African Critical Minerals</h2><p>Join Horizon Pension Fund, Nkosi Family Office, and Meridian Capital in Fund I.</p></div>
+      <div class="cta-btns">
+        <button class="btn btn-o" onclick="nav('strategy')">Read Strategy</button>
+        <button class="btn btn-p" onclick="nav('lp')">Request Access</button>
+      </div>
+    </div>
+    <div style="height:2rem"></div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════
+     STRATEGY
+════════════════════════════════════ -->
+<div class="pg" id="pg-strategy">
+  <div class="wrap">
+    <div class="sec">
+      <div class="tag">Investment Strategy</div>
+      <h1 class="h1" style="font-size:clamp(2rem,4vw,3rem)">Disciplined Capital.<br><em>Active Transformation.</em></h1>
+      <p class="lead">Aurexia is a capital + structuring + execution platform that converts fragmented, undercapitalised mineral assets into institutional-grade investments and exits them to global buyers.</p>
+
+      <div class="tag" style="margin-top:1.5rem">5 Integrated Engines</div>
+      <div class="engine-row">
+        <div class="eng"><div class="en">Engine 01</div><div class="et">Deal Origination</div></div>
+        <div class="eng"><div class="en">Engine 02</div><div class="et">Capital &amp; Investment</div></div>
+        <div class="eng"><div class="en">Engine 03</div><div class="et">Asset Transformation</div></div>
+        <div class="eng"><div class="en">Engine 04</div><div class="et">Market &amp; Offtake</div></div>
+        <div class="eng"><div class="en">Engine 05</div><div class="et">Exit &amp; Liquidity</div></div>
+      </div>
+
+      <div class="grid2" style="margin-bottom:1rem">
+        <div class="card">
+          <div class="tag">Capital Model</div>
+          <ul style="list-style:none;display:flex;flex-direction:column;gap:8px">
+            <li style="font-size:13px;color:var(--muted);display:flex;gap:8px;align-items:flex-start"><span style="color:var(--blue);flex-shrink:0">—</span> Minority growth equity positions</li>
+            <li style="font-size:13px;color:var(--muted);display:flex;gap:8px;align-items:flex-start"><span style="color:var(--blue);flex-shrink:0">—</span> Structured debt instruments</li>
+            <li style="font-size:13px;color:var(--muted);display:flex;gap:8px;align-items:flex-start"><span style="color:var(--blue);flex-shrink:0">—</span> Offtake-linked capital</li>
+            <li style="font-size:13px;color:var(--muted);display:flex;gap:8px;align-items:flex-start"><span style="color:var(--blue);flex-shrink:0">—</span> Bridge &amp; expansion financing</li>
+            <li style="font-size:13px;color:var(--muted);display:flex;gap:8px;align-items:flex-start"><span style="color:var(--blue);flex-shrink:0">—</span> Layered waterfall structures</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="tag">Target Assets</div>
+          <ul style="list-style:none;display:flex;flex-direction:column;gap:8px">
+            <li style="font-size:13px;color:var(--muted);display:flex;gap:8px"><span style="color:var(--emerald);flex-shrink:0">—</span> Producing &amp; near-producing assets</li>
+            <li style="font-size:13px;color:var(--muted);display:flex;gap:8px"><span style="color:var(--emerald);flex-shrink:0">—</span> Distressed &amp; undercapitalised operators</li>
+            <li style="font-size:13px;color:var(--muted);display:flex;gap:8px"><span style="color:var(--emerald);flex-shrink:0">—</span> Government &amp; state-linked assets</li>
+            <li style="font-size:13px;color:var(--muted);display:flex;gap:8px"><span style="color:var(--emerald);flex-shrink:0">—</span> Family-owned &amp; fragmented holdings</li>
+            <li style="font-size:13px;color:var(--muted);display:flex;gap:8px"><span style="color:var(--emerald);flex-shrink:0">—</span> Junior mining companies</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom:1rem">
+        <div class="tag">LP Value Proposition — Why Investors Choose Aurexia</div>
+        <div class="grid3" style="margin-top:.5rem">
+          <div>
+            <div style="font-size:11px;color:var(--bronze);font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.5rem">Multiple Return Drivers</div>
+            <p style="font-size:13px;color:var(--muted);line-height:1.7">Entry discount + EBITDA growth + cash yield + multiple expansion. Four distinct return vectors in a single investment.</p>
+          </div>
+          <div>
+            <div style="font-size:11px;color:var(--bronze);font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.5rem">Downside Protection</div>
+            <p style="font-size:13px;color:var(--muted);line-height:1.7">Producing assets with cash flow + structured capital + secured offtake contracts reduce NAV volatility.</p>
+          </div>
+          <div>
+            <div style="font-size:11px;color:var(--bronze);font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.5rem">Full Visibility</div>
+            <p style="font-size:13px;color:var(--muted);line-height:1.7">Pipeline, offtake, and exit pathway visibility through the LP Portal and quarterly reporting engine.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="tag">Competitive Positioning</div>
+      <div class="tbl-wrap" style="margin-top:.5rem">
+        <table class="compare-table">
+          <thead><tr><th>Competitor Type</th><th>Weakness</th><th>Aurexia Advantage</th></tr></thead>
+          <tbody>
+            <tr><td>Mining companies</td><td>Capital constrained</td><td class="good">Aurexia provides structured capital</td></tr>
+            <tr><td>Passive PE funds</td><td>No operational edge</td><td class="good">Active transformation &amp; value creation</td></tr>
+            <tr><td>Pure advisory firms</td><td>No skin in the game</td><td class="good">Principal investor aligned with LPs</td></tr>
+            <tr><td>Commodity traders</td><td>No governance support</td><td class="good">Full institutional governance overhaul</td></tr>
+            <tr><td>Junior mining co's</td><td>Single asset exposure</td><td class="good">Diversified portfolio, multiple exits</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div style="height:2rem"></div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════
+     PIPELINE
+════════════════════════════════════ -->
+<div class="pg" id="pg-pipeline">
+  <div class="wrap">
+    <div class="pipeline-header">
+      <div>
+        <div class="tag">Deal Pipeline</div>
+        <h1 class="h2">Proprietary Pipeline — 200+ Assets</h1>
+      </div>
+      <button class="btn btn-p btn-sm" onclick="nav('submit')">+ Submit Asset</button>
+    </div>
+
+    <div class="stage-funnel">
+      <div class="sfstage"><div class="sfn" style="color:var(--muted)">142</div><div class="sfl">Sourced</div></div>
+      <div class="sfstage"><div class="sfn" style="color:var(--bronze)">28</div><div class="sfl">Screening</div></div>
+      <div class="sfstage"><div class="sfn" style="color:var(--blue)">14</div><div class="sfl">Diligence</div></div>
+      <div class="sfstage"><div class="sfn" style="color:var(--gold)">8</div><div class="sfl">IC Review</div></div>
+      <div class="sfstage"><div class="sfn" style="color:var(--emerald)">6</div><div class="sfl">Portfolio</div></div>
+      <div class="sfstage"><div class="sfn" style="color:var(--muted)">3</div><div class="sfl">Exited</div></div>
+    </div>
+
+    <div class="filters">
+      <button class="fbtn on" onclick="filterPipeline('all',this)">All Commodities</button>
+      <button class="fbtn" onclick="filterPipeline('lithium',this)">Lithium</button>
+      <button class="fbtn" onclick="filterPipeline('nickel',this)">Nickel</button>
+      <button class="fbtn" onclick="filterPipeline('manganese',this)">Manganese</button>
+      <button class="fbtn" onclick="filterPipeline('vanadium',this)">Vanadium</button>
+      <button class="fbtn" onclick="filterPipeline('graphite',this)">Graphite</button>
+    </div>
+
+    <div class="tbl-wrap" id="pipeline-tbl">
+      <table class="tbl">
+        <thead><tr>
+          <th>Asset Name</th><th>Country</th><th>Commodity</th>
+          <th>Stage</th><th>Capital Need</th><th>Score</th><th>ESG</th>
+        </tr></thead>
+        <tbody id="ptbody">
+          <tr data-com="lithium"><td class="em">Kalahari Lithium Block</td><td>Botswana</td><td style="color:var(--blue)">Lithium</td><td><span class="badge b-green">Portfolio</span></td><td>$45M</td><td><div class="sbar"><div class="sfill" style="width:88%;background:var(--emerald)"></div></div></td><td style="color:var(--emerald)">88</td></tr>
+          <tr data-com="lithium"><td class="em">Karoo Lithium Brine</td><td>South Africa</td><td style="color:var(--blue)">Lithium</td><td><span class="badge b-green">Portfolio</span></td><td>$55M</td><td><div class="sbar"><div class="sfill" style="width:91%;background:var(--emerald)"></div></div></td><td style="color:var(--emerald)">91</td></tr>
+          <tr data-com="vanadium"><td class="em">Limpopo Vanadium Project</td><td>South Africa</td><td style="color:var(--gold)">Vanadium</td><td><span class="badge b-gold">IC Review</span></td><td>$28M</td><td><div class="sbar"><div class="sfill" style="width:74%;background:var(--gold)"></div></div></td><td style="color:var(--gold)">74</td></tr>
+          <tr data-com="nickel"><td class="em">Zambezi Nickel Strip</td><td>Zambia</td><td style="color:var(--bronze)">Nickel</td><td><span class="badge b-blue">Diligence</span></td><td>$60M</td><td><div class="sbar"><div class="sfill" style="width:68%;background:var(--blue)"></div></div></td><td style="color:var(--blue)">68</td></tr>
+          <tr data-com="nickel"><td class="em">Nkana Nickel Belt</td><td>Zambia</td><td style="color:var(--bronze)">Nickel</td><td><span class="badge b-green">Portfolio</span></td><td>$38M</td><td><div class="sbar"><div class="sfill" style="width:82%;background:var(--emerald)"></div></div></td><td style="color:var(--emerald)">82</td></tr>
+          <tr data-com="graphite"><td class="em">Manica Graphite Licence</td><td>Mozambique</td><td style="color:var(--muted)">Graphite</td><td><span class="badge b-bronze">Screening</span></td><td>$18M</td><td><div class="sbar"><div class="sfill" style="width:55%;background:var(--bronze)"></div></div></td><td style="color:var(--bronze)">55</td></tr>
+          <tr data-com="manganese"><td class="em">Hwange Manganese Block</td><td>Zimbabwe</td><td style="color:var(--gold)">Manganese</td><td><span class="badge b-bronze">Screening</span></td><td>$35M</td><td><div class="sbar"><div class="sfill" style="width:61%;background:var(--bronze)"></div></div></td><td style="color:var(--bronze)">61</td></tr>
+          <tr data-com="nickel"><td class="em">Kasempa Copper-Nickel</td><td>Zambia</td><td style="color:var(--bronze)">Nickel</td><td><span class="badge b-gray">Sourced</span></td><td>$80M</td><td><div class="sbar"><div class="sfill" style="width:40%;background:var(--faint)"></div></div></td><td style="color:var(--muted)">40</td></tr>
+          <tr data-com="vanadium"><td class="em">Makonde Vanadium Reef</td><td>Zimbabwe</td><td style="color:var(--gold)">Vanadium</td><td><span class="badge b-blue">Diligence</span></td><td>$22M</td><td><div class="sbar"><div class="sfill" style="width:70%;background:var(--blue)"></div></div></td><td style="color:var(--blue)">70</td></tr>
+          <tr data-com="lithium"><td class="em">Lake Mweru Lithium Brine</td><td>Zambia</td><td style="color:var(--blue)">Lithium</td><td><span class="badge b-gray">Sourced</span></td><td>$50M</td><td><div class="sbar"><div class="sfill" style="width:38%;background:var(--faint)"></div></div></td><td style="color:var(--muted)">38</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sec">
+      <div class="tag">Geographic Coverage</div>
+      <h2 class="h2">Southern Africa Asset Map</h2>
+      <div class="map-countries">
+        <div class="mcountry"><div><div class="mn">🇿🇦 South Africa</div><div class="mc">52 assets · Lithium, Vanadium, Manganese</div></div></div>
+        <div class="mcountry"><div><div class="mn">🇧🇼 Botswana</div><div class="mc">38 assets · Lithium, Nickel, Copper</div></div></div>
+        <div class="mcountry"><div><div class="mn">🇿🇲 Zambia</div><div class="mc">44 assets · Nickel, Copper, Lithium</div></div></div>
+        <div class="mcountry"><div><div class="mn">🇿🇼 Zimbabwe</div><div class="mc">31 assets · Vanadium, Lithium, Graphite</div></div></div>
+        <div class="mcountry"><div><div class="mn">🇲🇿 Mozambique</div><div class="mc">27 assets · Graphite, Nickel</div></div></div>
+        <div class="mcountry"><div><div class="mn">🇹🇿 Tanzania</div><div class="mc">14 assets · Graphite, Nickel</div></div></div>
+      </div>
+    </div>
+    <div style="height:2rem"></div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════
+     ESG
+════════════════════════════════════ -->
+<div class="pg" id="pg-esg">
+  <div class="wrap">
+    <div class="sec">
+      <div class="tag">ESG &amp; Compliance</div>
+      <h1 class="h2">Operational ESG, Not Box-Ticking</h1>
+      <p class="lead">Aurexia embeds ESG into operations, governance, and value creation — making assets bankable and institutional-grade for global buyers.</p>
+
+      <div class="esg-scores">
+        <div class="esg-s">
+          <div class="esg-lbl">Environmental</div>
+          <div class="esg-val" style="color:var(--emerald)">82</div>
+          <div style="font-size:12px;color:var(--muted)">Water compliance, rehabilitation, emissions monitoring</div>
+        </div>
+        <div class="esg-s">
+          <div class="esg-lbl">Social</div>
+          <div class="esg-val" style="color:var(--blue)">76</div>
+          <div style="font-size:12px;color:var(--muted)">Community uplift, local hiring, labour rights</div>
+        </div>
+        <div class="esg-s">
+          <div class="esg-lbl">Governance</div>
+          <div class="esg-val" style="color:var(--gold)">79</div>
+          <div style="font-size:12px;color:var(--muted)">Board structures, reporting, audit readiness</div>
+        </div>
+      </div>
+
+      <div class="grid2">
+        <div class="card">
+          <div class="tag">Open Action Items</div>
+          <div class="action-item">
+            <div><div class="ai-name">Limpopo Vanadium — Water Licence</div><div class="ai-meta">Due: 30 Apr 2026</div></div>
+            <span class="badge b-blue">In Progress</span>
+          </div>
+          <div class="action-item">
+            <div><div class="ai-name">Nkana Nickel — Community Report</div><div class="ai-meta">Due: 15 May 2026</div></div>
+            <span class="badge b-gold">Pending</span>
+          </div>
+          <div class="action-item">
+            <div><div class="ai-name">Hwange Manganese — Safety Audit</div><div class="ai-meta">Due: 30 Jun 2026</div></div>
+            <span class="badge b-gold">Pending</span>
+          </div>
+          <div class="action-item">
+            <div><div class="ai-name">Karoo Lithium — Annual ESG Audit</div><div class="ai-meta">Completed: 1 Apr 2026</div></div>
+            <span class="badge b-green">Complete</span>
+          </div>
+        </div>
+        <div class="card">
+          <div class="tag">ESG Framework</div>
+          <ul style="list-style:none;display:flex;flex-direction:column;gap:10px">
+            <li style="font-size:13px;color:var(--muted);display:flex;gap:8px"><span style="color:var(--emerald)">✓</span> IFC Performance Standards alignment</li>
+            <li style="font-size:13px;color:var(--muted);display:flex;gap:8px"><span style="color:var(--emerald)">✓</span> UN Sustainable Development Goals mapping</li>
+            <li style="font-size:13px;color:var(--muted);display:flex;gap:8px"><span style="color:var(--emerald)">✓</span> GRI Standards reporting framework</li>
+            <li style="font-size:13px;color:var(--muted);display:flex;gap:8px"><span style="color:var(--emerald)">✓</span> Equator Principles for project finance</li>
+            <li style="font-size:13px;color:var(--muted);display:flex;gap:8px"><span style="color:var(--emerald)">✓</span> TCFD climate risk disclosure</li>
+            <li style="font-size:13px;color:var(--muted);display:flex;gap:8px"><span style="color:var(--emerald)">✓</span> Annual independent ESG audit per asset</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div style="height:2rem"></div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════
+     TEAM
+════════════════════════════════════ -->
+<div class="pg" id="pg-team">
+  <div class="wrap">
+    <div class="sec">
+      <div class="tag">Leadership</div>
+      <h1 class="h2">Execution-Led Leadership</h1>
+      <p class="lead">Aurexia is led by professionals with deep expertise across mining, structured finance, and investment execution in emerging markets.</p>
+      <div class="team-grid">
+        <div class="team-card">
+          <div class="tc-avatar" style="background:var(--gold-dim);color:var(--gold)">SM</div>
+          <div class="tc-name">Sarah Moyo</div>
+          <div class="tc-role">Managing Partner / GP</div>
+          <p class="tc-bio">20 years in African resource investment and structured finance. Previously MD at Standard Bank Mining Finance. Led 14 transactions across 6 countries totalling $2.4B.</p>
+        </div>
+        <div class="team-card">
+          <div class="tc-avatar" style="background:var(--blue-dim);color:var(--blue)">JO</div>
+          <div class="tc-name">James Okafor</div>
+          <div class="tc-role">Chief Investment Officer</div>
+          <p class="tc-bio">Former Head of Mining at African Development Bank. DPhil in Economic Geology from Oxford. Deep expertise in valuation of early-stage to producing mineral assets.</p>
+        </div>
+        <div class="team-card">
+          <div class="tc-avatar" style="background:var(--emerald-dim);color:var(--emerald)">TD</div>
+          <div class="tc-name">Thabo Dlamini</div>
+          <div class="tc-role">Investment Committee</div>
+          <p class="tc-bio">Ex-Macquarie Capital, 15 years structuring project finance for energy and mining. Specialises in layered capital solutions and offtake-linked financing.</p>
+        </div>
+        <div class="team-card">
+          <div class="tc-avatar" style="background:var(--bronze-dim);color:var(--bronze)">AP</div>
+          <div class="tc-name">Anika Patel</div>
+          <div class="tc-role">Investment Committee</div>
+          <p class="tc-bio">Former partner at Clifford Chance (Mining &amp; Resources). Expert in SPV structuring, cross-border M&amp;A, and exit execution in Sub-Saharan Africa.</p>
+        </div>
+        <div class="team-card">
+          <div class="tc-avatar" style="background:rgba(200,200,200,.08);color:var(--muted)">NM</div>
+          <div class="tc-name">Nomsa Mahlangu</div>
+          <div class="tc-role">ESG / Compliance Officer</div>
+          <p class="tc-bio">15 years in sustainability advisory for mining majors. Certified GRI practitioner. Has implemented ESG frameworks across 30+ African mining operations.</p>
+        </div>
+        <div class="team-card">
+          <div class="tc-avatar" style="background:rgba(200,200,200,.08);color:var(--muted)">KS</div>
+          <div class="tc-name">Kwame Asante</div>
+          <div class="tc-role">Operating Partner</div>
+          <p class="tc-bio">30 years in mine operations and production optimisation. Former COO at Impala Platinum. Specialist in cost reduction, production ramp-up, and governance reform.</p>
+        </div>
+      </div>
+    </div>
+    <div style="height:2rem"></div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════
+     PLATFORM (INTERNAL OS)
+════════════════════════════════════ -->
+<div class="pg" id="pg-platform">
+  <div class="dash-wrap">
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+      <div class="sb-user">
+        <div class="sbu-name">Sarah Moyo</div>
+        <div class="sbu-role">GP / Partner · All Access</div>
+      </div>
+      <div class="sb-section">Overview</div>
+      <div class="sb-item on" onclick="dash('overview',this)"><span class="sb-icon">▣</span> Dashboard</div>
+      <div class="sb-section">Capital</div>
+      <div class="sb-item" onclick="dash('crm',this)"><span class="sb-icon">◈</span> LP CRM</div>
+      <div class="sb-item" onclick="dash('pipeline',this)"><span class="sb-icon">⬡</span> Deal Pipeline</div>
+      <div class="sb-section">Execution</div>
+      <div class="sb-item" onclick="dash('ic',this)"><span class="sb-icon">◉</span> IC Workflow</div>
+      <div class="sb-item" onclick="dash('capstack',this)"><span class="sb-icon">▤</span> Capital Structuring</div>
+      <div class="sb-item" onclick="dash('portfolio',this)"><span class="sb-icon">▲</span> Portfolio</div>
+      <div class="sb-section">Compliance</div>
+      <div class="sb-item" onclick="dash('esg-dash',this)"><span class="sb-icon">✦</span> ESG Tracker</div>
+      <div class="sb-item" onclick="dash('dataroom',this)"><span class="sb-icon">▦</span> Data Rooms</div>
+      <div class="sb-section">Reporting</div>
+      <div class="sb-item" onclick="dash('reports',this)"><span class="sb-icon">≡</span> Reports</div>
+      <div class="sb-item" onclick="dash('admin',this)"><span class="sb-icon">⚙</span> Admin / RBAC</div>
+    </div>
+
+    <!-- Main -->
+    <div class="dash-main">
+
+      <!-- OVERVIEW -->
+      <div class="dash-view on" id="dv-overview">
+        <div class="dh"><h2>Platform Overview</h2><span class="dh-sub">April 2026 · Q2 Active</span></div>
+        <div class="grid4" style="margin-bottom:1rem">
+          <div class="mcard"><div class="lbl">AUM Committed</div><div class="val">$187M</div><div class="sub">↑ $22M this quarter</div></div>
+          <div class="mcard"><div class="lbl">Active Pipeline</div><div class="val">47</div><div class="sub">↑ 8 new this month</div></div>
+          <div class="mcard"><div class="lbl">Portfolio Assets</div><div class="val">6</div><div class="sub">↑ 1 deal closed</div></div>
+          <div class="mcard"><div class="lbl">Avg Portfolio IRR</div><div class="val">21.4%</div><div class="sub">↑ vs 19.1% target</div></div>
+        </div>
+        <div class="grid2">
+          <div class="card">
+            <div class="tag">LP Fundraising Funnel</div>
+            <div class="frow"><span class="fl">Leads</span><div class="pbar"><div class="pfill" style="width:100%"></div></div><span class="fc">84</span></div>
+            <div class="frow"><span class="fl">Qualified</span><div class="pbar"><div class="pfill" style="width:63%"></div></div><span class="fc">53</span></div>
+            <div class="frow"><span class="fl">NDA Signed</span><div class="pbar"><div class="pfill" style="width:38%"></div></div><span class="fc">32</span></div>
+            <div class="frow"><span class="fl">Data Room</span><div class="pbar"><div class="pfill" style="width:21%"></div></div><span class="fc">18</span></div>
+            <div class="frow"><span class="fl">Subscribed</span><div class="pbar"><div class="pfill" style="width:13%"></div></div><span class="fc">11</span></div>
+            <div class="frow"><span class="fl">Active LP</span><div class="pbar"><div class="pfill" style="width:8%;background:var(--emerald)"></div></div><span class="fc">7</span></div>
+          </div>
+          <div class="card">
+            <div class="tag">Recent Activity</div>
+            <div class="act-item"><div class="act-dot" style="background:var(--emerald)"></div><div><div class="act-text"><strong>Kalahari Lithium</strong> — IC approval received. Capital stack finalised.</div><div class="act-time">2h ago</div></div></div>
+            <div class="act-item"><div class="act-dot" style="background:var(--blue)"></div><div><div class="act-text"><strong>Horizon Pension Fund</strong> — NDA signed. Data room access granted.</div><div class="act-time">5h ago</div></div></div>
+            <div class="act-item"><div class="act-dot" style="background:var(--bronze)"></div><div><div class="act-text"><strong>Limpopo Vanadium</strong> — ESG score updated to 74. Action plan flagged.</div><div class="act-time">Yesterday</div></div></div>
+            <div class="act-item"><div class="act-dot" style="background:var(--gold)"></div><div><div class="act-text"><strong>New submission</strong> — Kasempa Copper-Nickel entered pipeline from website.</div><div class="act-time">2 days ago</div></div></div>
+            <div class="act-item"><div class="act-dot" style="background:var(--blue)"></div><div><div class="act-text"><strong>Q1 LP Report</strong> — Distributed to 7 active LPs. 5 downloads confirmed.</div><div class="act-time">3 days ago</div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- LP CRM -->
+      <div class="dash-view" id="dv-crm">
+        <div class="dh"><h2>LP CRM</h2><button class="btn btn-p btn-sm">+ Add Investor</button></div>
+        <div class="grid4" style="margin-bottom:1rem">
+          <div class="mcard"><div class="lbl">Total Leads</div><div class="val">84</div></div>
+          <div class="mcard"><div class="lbl">Committed Capital</div><div class="val">$187M</div></div>
+          <div class="mcard"><div class="lbl">Active LPs</div><div class="val">7</div></div>
+          <div class="mcard"><div class="lbl">Pipeline Value</div><div class="val">$420M</div><div class="sub">Qualified only</div></div>
+        </div>
+        <div class="tbl-wrap">
+          <table class="tbl">
+            <thead><tr><th>Investor</th><th>Type</th><th>Geography</th><th>Ticket Size</th><th>Status</th><th>Last Contact</th></tr></thead>
+            <tbody>
+              <tr><td class="em">Horizon Pension Fund</td><td>Pension</td><td>Netherlands</td><td>$50M</td><td><span class="badge b-blue">Data Room</span></td><td>Today</td></tr>
+              <tr><td class="em">Nkosi Family Office</td><td>Family Office</td><td>South Africa</td><td>$20M</td><td><span class="badge b-green">Active LP</span></td><td>2 days ago</td></tr>
+              <tr><td class="em">Atlas Infrastructure</td><td>Infra Fund</td><td>UK</td><td>$75M</td><td><span class="badge b-gold">NDA Signed</span></td><td>1 week ago</td></tr>
+              <tr><td class="em">Gulf Sovereign Partners</td><td>Sovereign</td><td>UAE</td><td>$100M</td><td><span class="badge b-bronze">Qualified</span></td><td>3 days ago</td></tr>
+              <tr><td class="em">Meridian Capital Group</td><td>PE Fund</td><td>USA</td><td>$30M</td><td><span class="badge b-green">Active LP</span></td><td>1 week ago</td></tr>
+              <tr><td class="em">Nordic Green Capital</td><td>ESG Fund</td><td>Norway</td><td>$45M</td><td><span class="badge b-bronze">Qualified</span></td><td>4 days ago</td></tr>
+              <tr><td class="em">Tata Investment Corp</td><td>Corp Fund</td><td>India</td><td>$60M</td><td><span class="badge b-gray">Lead</span></td><td>1 week ago</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- PIPELINE DASH -->
+      <div class="dash-view" id="dv-pipeline">
+        <div class="dh"><h2>Deal Pipeline</h2><button class="btn btn-p btn-sm" onclick="nav('submit')">+ Add Asset</button></div>
+        <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:3px;overflow:hidden;margin-bottom:1rem">
+          <div style="background:var(--card);padding:.9rem;text-align:center"><div style="font-family:var(--font-d);font-size:1.6rem;color:var(--muted)">38</div><div style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-top:3px">Sourced</div></div>
+          <div style="background:var(--card);padding:.9rem;text-align:center"><div style="font-family:var(--font-d);font-size:1.6rem;color:var(--bronze)">12</div><div style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-top:3px">Screening</div></div>
+          <div style="background:var(--card);padding:.9rem;text-align:center"><div style="font-family:var(--font-d);font-size:1.6rem;color:var(--blue)">5</div><div style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-top:3px">Diligence</div></div>
+          <div style="background:var(--card);padding:.9rem;text-align:center"><div style="font-family:var(--font-d);font-size:1.6rem;color:var(--gold)">2</div><div style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-top:3px">IC Review</div></div>
+          <div style="background:var(--card);padding:.9rem;text-align:center"><div style="font-family:var(--font-d);font-size:1.6rem;color:var(--emerald)">6</div><div style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-top:3px">Portfolio</div></div>
+        </div>
+        <div class="tbl-wrap">
+          <table class="tbl">
+            <thead><tr><th>Asset</th><th>Country</th><th>Commodity</th><th>Stage</th><th>Capital</th><th>Score</th><th>Analyst</th></tr></thead>
+            <tbody>
+              <tr><td class="em">Kalahari Lithium Block</td><td>Botswana</td><td style="color:var(--blue)">Lithium</td><td><span class="badge b-green">Portfolio</span></td><td>$45M</td><td style="color:var(--emerald)">88</td><td>K. Asante</td></tr>
+              <tr><td class="em">Limpopo Vanadium</td><td>South Africa</td><td style="color:var(--gold)">Vanadium</td><td><span class="badge b-gold">IC Review</span></td><td>$28M</td><td style="color:var(--gold)">74</td><td>J. Okafor</td></tr>
+              <tr><td class="em">Zambezi Nickel Strip</td><td>Zambia</td><td style="color:var(--bronze)">Nickel</td><td><span class="badge b-blue">Diligence</span></td><td>$60M</td><td style="color:var(--blue)">68</td><td>T. Dlamini</td></tr>
+              <tr><td class="em">Manica Graphite Licence</td><td>Mozambique</td><td style="color:var(--muted)">Graphite</td><td><span class="badge b-bronze">Screening</span></td><td>$18M</td><td style="color:var(--bronze)">55</td><td>—</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- IC WORKFLOW -->
+      <div class="dash-view" id="dv-ic">
+        <div class="dh"><h2>Investment Committee</h2><span class="dh-sub" style="color:var(--gold)">2 memos pending</span></div>
+        <div class="ic-track">
+          <div class="ic-step done"><div class="isn">Step 01</div><div class="ist">Screening Done</div></div>
+          <div class="ic-step done"><div class="isn">Step 02</div><div class="ist">Memo Generated</div></div>
+          <div class="ic-step now"><div class="isn">Step 03</div><div class="ist">IC Vote Open</div></div>
+          <div class="ic-step"><div class="isn">Step 04</div><div class="ist">Conditions Set</div></div>
+          <div class="ic-step"><div class="isn">Step 05</div><div class="ist">Final Approval</div></div>
+        </div>
+        <div class="grid2">
+          <div class="card">
+            <div class="tag">Limpopo Vanadium — IC Vote</div>
+            <div style="background:var(--gold-dim);border:1px solid rgba(232,184,75,.2);border-radius:2px;padding:10px 12px;margin-bottom:1rem">
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+                <div><div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:3px">Entry Multiple</div><div style="font-size:13px;color:var(--text)">3.4x EBITDA</div></div>
+                <div><div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:3px">Target IRR</div><div style="font-size:13px;color:var(--text)">19.8%</div></div>
+                <div><div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:3px">Capital Need</div><div style="font-size:13px;color:var(--text)">$28M</div></div>
+                <div><div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:3px">Hold Period</div><div style="font-size:13px;color:var(--text)">4–5 years</div></div>
+              </div>
+            </div>
+            <div class="vote-item"><div><div class="vi-name">Sarah Moyo</div><div class="vi-role">GP / Partner</div></div><span class="badge b-green">Approved</span></div>
+            <div class="vote-item"><div><div class="vi-name">James Okafor</div><div class="vi-role">CIO</div></div><span class="badge b-green">Approved</span></div>
+            <div class="vote-item"><div><div class="vi-name">Thabo Dlamini</div><div class="vi-role">IC Member</div></div><span class="badge b-blue">Reviewing</span></div>
+            <div class="vote-item"><div><div class="vi-name">Anika Patel</div><div class="vi-role">IC Member</div></div><span class="badge b-gold">Pending</span></div>
+          </div>
+          <div class="card">
+            <div class="tag">Memo Summary</div>
+            <p style="font-size:13px;color:var(--muted);line-height:1.8;margin-bottom:1rem">Limpopo Vanadium Project is a producing vanadite deposit with established off-take to European steel producers. Capital to fund expansion from 2.1ktpa to 4.8ktpa. Governance upgrade and ESG implementation underway.</p>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;border-top:1px solid var(--border);padding-top:1rem">
+              <div><div style="font-size:9px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:3px">MOIC</div><div style="font-family:var(--font-d);font-size:1.4rem;color:var(--gold)">2.4x</div></div>
+              <div><div style="font-size:9px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:3px">Payback</div><div style="font-family:var(--font-d);font-size:1.4rem;color:var(--gold)">3.2 yrs</div></div>
+              <div><div style="font-size:9px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:3px">Bear IRR</div><div style="font-family:var(--font-d);font-size:1.4rem;color:var(--muted)">14.1%</div></div>
+              <div><div style="font-size:9px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:3px">Bull IRR</div><div style="font-family:var(--font-d);font-size:1.4rem;color:var(--emerald)">24.3%</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CAPITAL STRUCTURING -->
+      <div class="dash-view" id="dv-capstack">
+        <div class="dh"><h2>Capital Structuring Engine</h2></div>
+        <div class="grid2">
+          <div class="card">
+            <div class="tag">Limpopo Vanadium — Capital Stack</div>
+            <div class="cstack-bar"><div class="csb-head"><span>Equity Tranche</span><span>$16.8M (60%)</span></div><div class="csb-track"><div class="csb-fill" style="width:60%;background:var(--blue)"></div></div></div>
+            <div class="cstack-bar"><div class="csb-head"><span>Structured Debt</span><span>$8.4M (30%)</span></div><div class="csb-track"><div class="csb-fill" style="width:30%;background:var(--bronze)"></div></div></div>
+            <div class="cstack-bar"><div class="csb-head"><span>Offtake-Linked Capital</span><span>$2.8M (10%)</span></div><div class="csb-track"><div class="csb-fill" style="width:10%;background:var(--emerald)"></div></div></div>
+            <div style="border-top:1px solid var(--border);padding-top:1rem;margin-top:.5rem;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;text-align:center">
+              <div><div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px">Base IRR</div><div style="font-family:var(--font-d);font-size:1.3rem;color:var(--gold)">19.8%</div></div>
+              <div><div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px">Bull IRR</div><div style="font-family:var(--font-d);font-size:1.3rem;color:var(--emerald)">24.3%</div></div>
+              <div><div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px">Bear IRR</div><div style="font-family:var(--font-d);font-size:1.3rem;color:var(--muted)">14.1%</div></div>
+              <div><div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px">MOIC</div><div style="font-family:var(--font-d);font-size:1.3rem;color:var(--text)">2.4x</div></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="tag">Portfolio — Aggregate Stack</div>
+            <div class="cstack-bar"><div class="csb-head"><span>Total Equity</span><span>$97.8M (60%)</span></div><div class="csb-track"><div class="csb-fill" style="width:60%;background:var(--blue)"></div></div></div>
+            <div class="cstack-bar"><div class="csb-head"><span>Total Debt</span><span>$48.9M (30%)</span></div><div class="csb-track"><div class="csb-fill" style="width:30%;background:var(--bronze)"></div></div></div>
+            <div class="cstack-bar"><div class="csb-head"><span>Offtake-Linked</span><span>$16.3M (10%)</span></div><div class="csb-track"><div class="csb-fill" style="width:10%;background:var(--emerald)"></div></div></div>
+            <div style="border-top:1px solid var(--border);padding-top:1rem;margin-top:.5rem">
+              <div style="font-size:12px;color:var(--muted);line-height:1.8">Total deployed: <strong style="color:var(--text)">$163M</strong> across 6 portfolio assets. Weighted average IRR: <strong style="color:var(--emerald)">21.4%</strong>. Cash yield YTD: <strong style="color:var(--gold)">$8.2M</strong> from debt and offtake tranches.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PORTFOLIO -->
+      <div class="dash-view" id="dv-portfolio">
+        <div class="dh"><h2>Portfolio Management</h2><span class="dh-sub" style="color:var(--emerald)">6 assets · Avg IRR 21.4%</span></div>
+        <div class="grid4" style="margin-bottom:1rem">
+          <div class="mcard"><div class="lbl">Total Deployed</div><div class="val">$163M</div></div>
+          <div class="mcard"><div class="lbl">Portfolio NAV</div><div class="val">$218M</div><div class="sub">+33.7% unrealised</div></div>
+          <div class="mcard"><div class="lbl">Cash Yield YTD</div><div class="val">$8.2M</div></div>
+          <div class="mcard"><div class="lbl">ESG Average</div><div class="val">79</div><div class="sub" style="color:var(--gold)">2 in action</div></div>
+        </div>
+        <div class="tbl-wrap">
+          <table class="tbl">
+            <thead><tr><th>Asset</th><th>Country</th><th>Deployed</th><th>NAV</th><th>EBITDA</th><th>IRR</th><th>Exit Ready</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td class="em">Kalahari Lithium Block</td><td>Botswana</td><td>$45M</td><td>$62M</td><td>$14.2M</td><td style="color:var(--emerald)">24.1%</td><td><div class="sbar"><div class="sfill" style="width:88%;background:var(--emerald)"></div></div></td><td><span class="badge b-green">On Track</span></td></tr>
+              <tr><td class="em">Karoo Lithium Brine</td><td>South Africa</td><td>$55M</td><td>$71M</td><td>$18.8M</td><td style="color:var(--emerald)">22.6%</td><td><div class="sbar"><div class="sfill" style="width:91%;background:var(--emerald)"></div></div></td><td><span class="badge b-green">On Track</span></td></tr>
+              <tr><td class="em">Nkana Nickel Belt</td><td>Zambia</td><td>$38M</td><td>$44M</td><td>$9.1M</td><td style="color:var(--gold)">18.4%</td><td><div class="sbar"><div class="sfill" style="width:70%;background:var(--gold)"></div></div></td><td><span class="badge b-gold">Monitoring</span></td></tr>
+              <tr><td class="em">Makonde Vanadium Reef</td><td>Zimbabwe</td><td>$22M</td><td>$28M</td><td>$7.4M</td><td style="color:var(--emerald)">21.2%</td><td><div class="sbar"><div class="sfill" style="width:75%;background:var(--gold)"></div></div></td><td><span class="badge b-green">On Track</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ESG DASH -->
+      <div class="dash-view" id="dv-esg-dash">
+        <div class="dh"><h2>ESG Tracker</h2><span class="dh-sub">Portfolio avg: <span style="color:var(--emerald)">79/100</span></span></div>
+        <div class="grid3" style="margin-bottom:1rem">
+          <div class="mcard" style="text-align:center"><div class="lbl">Environmental</div><div class="val" style="color:var(--emerald)">82</div><div class="sub">Water, emissions, rehab</div></div>
+          <div class="mcard" style="text-align:center"><div class="lbl">Social</div><div class="val" style="color:var(--blue)">76</div><div class="sub">Community, labour</div></div>
+          <div class="mcard" style="text-align:center"><div class="lbl">Governance</div><div class="val" style="color:var(--gold)">79</div><div class="sub">Board, reporting</div></div>
+        </div>
+        <div class="card">
+          <div class="tag">Open Action Items</div>
+          <div class="action-item"><div><div class="ai-name">Limpopo Vanadium — Water Licence</div><div class="ai-meta">Due: 30 Apr 2026</div></div><span class="badge b-blue">In Progress</span></div>
+          <div class="action-item"><div><div class="ai-name">Nkana Nickel — Community Report</div><div class="ai-meta">Due: 15 May 2026</div></div><span class="badge b-gold">Pending</span></div>
+          <div class="action-item"><div><div class="ai-name">Karoo Lithium — Annual ESG Audit</div><div class="ai-meta">Completed: 1 Apr 2026</div></div><span class="badge b-green">Complete</span></div>
+        </div>
+      </div>
+
+      <!-- DATA ROOMS -->
+      <div class="dash-view" id="dv-dataroom">
+        <div class="dh"><h2>Data Rooms</h2><button class="btn btn-p btn-sm">+ Create Room</button></div>
+        <div class="grid3">
+          <div class="card" style="cursor:pointer">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.8rem"><div><div style="font-size:13px;color:var(--text);font-weight:600;margin-bottom:2px">Kalahari Lithium</div><div style="font-size:11px;color:var(--muted)">Transaction Room</div></div><span class="badge b-green">Active</span></div>
+            <div style="font-size:12px;color:var(--muted);margin-bottom:.8rem">24 documents · 5 participants</div>
+            <div style="font-size:11px;color:var(--muted)">Last activity: 3h ago</div>
+          </div>
+          <div class="card" style="cursor:pointer">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.8rem"><div><div style="font-size:13px;color:var(--text);font-weight:600;margin-bottom:2px">Limpopo Vanadium</div><div style="font-size:11px;color:var(--muted)">IC Diligence Room</div></div><span class="badge b-gold">IC Open</span></div>
+            <div style="font-size:12px;color:var(--muted);margin-bottom:.8rem">18 documents · 3 participants</div>
+            <div style="font-size:11px;color:var(--muted)">Last activity: Yesterday</div>
+          </div>
+          <div class="card" style="cursor:pointer">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.8rem"><div><div style="font-size:13px;color:var(--text);font-weight:600;margin-bottom:2px">Horizon Pension — Fund I</div><div style="font-size:11px;color:var(--muted)">LP Due Diligence</div></div><span class="badge b-blue">Open</span></div>
+            <div style="font-size:12px;color:var(--muted);margin-bottom:.8rem">12 documents · 2 participants</div>
+            <div style="font-size:11px;color:var(--muted)">Last activity: Today</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- REPORTS -->
+      <div class="dash-view" id="dv-reports">
+        <div class="dh"><h2>Reports</h2><button class="btn btn-p btn-sm">Generate Report</button></div>
+        <div class="tbl-wrap">
+          <table class="tbl">
+            <thead><tr><th>Report</th><th>Type</th><th>Period</th><th>Status</th><th>Recipients</th><th></th></tr></thead>
+            <tbody>
+              <tr><td class="em">Q1 2026 LP Report</td><td>LP Quarterly</td><td>Jan–Mar 2026</td><td><span class="badge b-green">Distributed</span></td><td>7 LPs</td><td><button class="btn btn-o btn-sm">View</button></td></tr>
+              <tr><td class="em">Q4 2025 IC Summary</td><td>IC Report</td><td>Oct–Dec 2025</td><td><span class="badge b-gray">Archived</span></td><td>IC Members</td><td><button class="btn btn-o btn-sm">View</button></td></tr>
+              <tr><td class="em">ESG Annual 2025</td><td>ESG Report</td><td>Full Year 2025</td><td><span class="badge b-green">Distributed</span></td><td>All LPs</td><td><button class="btn btn-o btn-sm">View</button></td></tr>
+              <tr><td class="em">Q2 2026 LP Report</td><td>LP Quarterly</td><td>Apr–Jun 2026</td><td><span class="badge b-gray">Draft</span></td><td>Pending</td><td><button class="btn btn-p btn-sm">Edit</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ADMIN / RBAC -->
+      <div class="dash-view" id="dv-admin">
+        <div class="dh"><h2>Admin &amp; RBAC</h2></div>
+        <div class="tbl-wrap">
+          <table class="tbl">
+            <thead><tr><th>Role</th><th>LP CRM</th><th>Pipeline</th><th>IC</th><th>Portfolio</th><th>ESG</th><th>Data Rooms</th><th>LP Portal</th><th>Admin</th></tr></thead>
+            <tbody>
+              <tr><td class="em">Super Admin</td><td style="color:var(--emerald)">Full</td><td style="color:var(--emerald)">Full</td><td style="color:var(--emerald)">Full</td><td style="color:var(--emerald)">Full</td><td style="color:var(--emerald)">Full</td><td style="color:var(--emerald)">Full</td><td style="color:var(--emerald)">Full</td><td style="color:var(--emerald)">Full</td></tr>
+              <tr><td class="em">GP / Partner</td><td style="color:var(--emerald)">Full</td><td style="color:var(--emerald)">Full</td><td style="color:var(--emerald)">Approve</td><td style="color:var(--emerald)">Full</td><td style="color:var(--gold)">Limited</td><td style="color:var(--emerald)">Create</td><td style="color:var(--emerald)">Full</td><td style="color:var(--gold)">Limited</td></tr>
+              <tr><td class="em">CIO / IC Member</td><td style="color:var(--gold)">View</td><td style="color:var(--emerald)">Full</td><td style="color:var(--emerald)">Vote</td><td style="color:var(--gold)">View</td><td style="color:var(--muted)">None</td><td style="color:var(--gold)">View</td><td style="color:var(--emerald)">Full</td><td style="color:var(--muted)">None</td></tr>
+              <tr><td class="em">Analyst</td><td style="color:var(--gold)">View</td><td style="color:var(--gold)">Score</td><td style="color:var(--gold)">Memo only</td><td style="color:var(--gold)">View</td><td style="color:var(--muted)">None</td><td style="color:var(--gold)">Upload</td><td style="color:var(--gold)">Limited</td><td style="color:var(--muted)">None</td></tr>
+              <tr><td class="em">LP / Investor</td><td style="color:var(--muted)">None</td><td style="color:var(--muted)">None</td><td style="color:var(--muted)">None</td><td style="color:var(--muted)">None</td><td style="color:var(--gold)">Summary</td><td style="color:var(--gold)">Assigned</td><td style="color:var(--emerald)">Full</td><td style="color:var(--muted)">None</td></tr>
+              <tr><td class="em">Mine Operator</td><td style="color:var(--muted)">None</td><td style="color:var(--gold)">Own only</td><td style="color:var(--muted)">None</td><td style="color:var(--muted)">None</td><td style="color:var(--gold)">Own only</td><td style="color:var(--gold)">Limited</td><td style="color:var(--muted)">None</td><td style="color:var(--muted)">None</td></tr>
+              <tr><td class="em">ESG Officer</td><td style="color:var(--muted)">None</td><td style="color:var(--muted)">None</td><td style="color:var(--muted)">None</td><td style="color:var(--gold)">ESG only</td><td style="color:var(--emerald)">Full</td><td style="color:var(--gold)">Assigned</td><td style="color:var(--muted)">None</td><td style="color:var(--muted)">None</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div><!-- /dash-main -->
+  </div><!-- /dash-wrap -->
+</div>
+
+<!-- ════════════════════════════════════
+     LP PORTAL
+════════════════════════════════════ -->
+<div class="pg" id="pg-lp">
+  <div class="wrap">
+    <div class="sec">
+      <div class="lp-banner">
+        <div>
+          <h2>Welcome, Horizon Pension Fund</h2>
+          <p>Fund I · Committed: $50M · Active since March 2025 · Status: Active LP</p>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:6px">Exit Readiness Score</div>
+          <div style="font-family:var(--font-d);font-size:2.5rem;color:var(--emerald)">82%</div>
+        </div>
+      </div>
+
+      <div class="lp-kpis">
+        <div class="lp-kpi"><div class="lkl">Net IRR (Since Inception)</div><div class="lkv">21.4%</div><div class="lks">↑ vs 18–22% target</div></div>
+        <div class="lp-kpi"><div class="lkl">MOIC</div><div class="lkv">1.4x</div><div class="lks">↑ Unrealised</div></div>
+        <div class="lp-kpi"><div class="lkl">Distributions YTD</div><div class="lkv">$3.2M</div><div class="lks">↑ From cash yield</div></div>
+      </div>
+
+      <div class="grid2" style="margin-bottom:1rem">
+        <div class="card">
+          <div class="tag">Portfolio Breakdown</div>
+          <div style="margin-bottom:.8rem">
+            <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:4px"><span>Kalahari Lithium Block</span><span style="color:var(--blue)">$45M · 24.1% IRR</span></div>
+            <div class="pbar"><div class="pfill" style="width:42%"></div></div>
+          </div>
+          <div style="margin-bottom:.8rem">
+            <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:4px"><span>Karoo Lithium Brine</span><span style="color:var(--blue)">$55M · 22.6% IRR</span></div>
+            <div class="pbar"><div class="pfill" style="width:52%"></div></div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:4px"><span>Nkana Nickel Belt</span><span style="color:var(--gold)">$38M · 18.4% IRR</span></div>
+            <div class="pbar"><div class="pfill" style="width:36%;background:var(--gold)"></div></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="tag">Documents &amp; Reports</div>
+          <div class="doc-row">
+            <div class="doc-ico">Q</div>
+            <div style="flex:1"><div class="doc-name">Q1 2026 Quarterly Report</div><div class="doc-meta">PDF · 2.4MB · Apr 5, 2026</div></div>
+            <button class="doc-dl">Download</button>
+          </div>
+          <div class="doc-row">
+            <div class="doc-ico">A</div>
+            <div style="flex:1"><div class="doc-name">ESG Annual Report 2025</div><div class="doc-meta">PDF · 4.1MB · Jan 15, 2026</div></div>
+            <button class="doc-dl">Download</button>
+          </div>
+          <div class="doc-row">
+            <div class="doc-ico">C</div>
+            <div style="flex:1"><div class="doc-name">Capital Call Notice — Tranche 2</div><div class="doc-meta">PDF · 0.8MB · Feb 1, 2026</div></div>
+            <button class="doc-dl">Download</button>
+          </div>
+          <div class="doc-row">
+            <div class="doc-ico">F</div>
+            <div style="flex:1"><div class="doc-name">Financial Statements FY2025</div><div class="doc-meta">PDF · 3.2MB · Mar 30, 2026</div></div>
+            <button class="doc-dl">Download</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="tag">Capital Calls &amp; Distributions</div>
+        <div class="tbl-wrap">
+          <table class="tbl">
+            <thead><tr><th>Date</th><th>Type</th><th>Amount</th><th>Status</th><th>Reference</th></tr></thead>
+            <tbody>
+              <tr><td>Mar 2025</td><td>Capital Call — Tranche 1</td><td>$25M</td><td><span class="badge b-green">Settled</span></td><td>CC-001-2025</td></tr>
+              <tr><td>Sep 2025</td><td>Distribution — Cash Yield</td><td>$1.4M</td><td><span class="badge b-green">Paid</span></td><td>DIST-002-2025</td></tr>
+              <tr><td>Feb 2026</td><td>Capital Call — Tranche 2</td><td>$25M</td><td><span class="badge b-green">Settled</span></td><td>CC-003-2026</td></tr>
+              <tr><td>Mar 2026</td><td>Distribution — Cash Yield</td><td>$1.8M</td><td><span class="badge b-green">Paid</span></td><td>DIST-004-2026</td></tr>
+              <tr><td>Jun 2026</td><td>Capital Call — Tranche 3 (est.)</td><td>TBD</td><td><span class="badge b-gold">Upcoming</span></td><td>—</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div style="height:2rem"></div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════
+     SUBMIT PROJECT
+════════════════════════════════════ -->
+<div class="pg" id="pg-submit">
+  <div class="wrap">
+    <div class="sec submit-wrap">
+      <div class="tag">Deal Origination</div>
+      <h1 class="h2">Submit a Project</h1>
+      <p class="lead">Aurexia actively sources undercapitalised and distressed mineral assets across Southern Africa. Submit your project to enter our proprietary pipeline.</p>
+
+      <div class="form-grid">
+        <div class="fgroup"><label class="flabel">Project / Asset Name</label><input class="finput" type="text" placeholder="e.g. Kalahari Block 4"></div>
+        <div class="fgroup"><label class="flabel">Country</label>
+          <select class="finput"><option value="">Select Country</option><option>South Africa</option><option>Botswana</option><option>Zambia</option><option>Zimbabwe</option><option>Mozambique</option><option>Tanzania</option><option>Namibia</option><option>DRC</option><option>Other</option></select>
+        </div>
+        <div class="fgroup"><label class="flabel">Primary Commodity</label>
+          <select class="finput"><option value="">Select Commodity</option><option>Lithium</option><option>Nickel</option><option>Manganese</option><option>Vanadium</option><option>Graphite</option><option>Copper</option><option>Cobalt</option><option>Other</option></select>
+        </div>
+        <div class="fgroup"><label class="flabel">Asset Stage</label>
+          <select class="finput"><option value="">Select Stage</option><option>Producing</option><option>Near-Producing</option><option>Development</option><option>Feasibility</option><option>Exploration</option></select>
+        </div>
+        <div class="fgroup"><label class="flabel">Capital Required (USD)</label><input class="finput" type="text" placeholder="e.g. $25,000,000"></div>
+        <div class="fgroup"><label class="flabel">Ownership Structure</label>
+          <select class="finput"><option value="">Select Type</option><option>Privately Owned</option><option>Family Owned</option><option>Publicly Listed</option><option>State / Government</option><option>Joint Venture</option><option>Distressed / Receivership</option></select>
+        </div>
+        <div class="fgroup"><label class="flabel">Your Full Name</label><input class="finput" type="text" placeholder="Full Name"></div>
+        <div class="fgroup"><label class="flabel">Email Address</label><input class="finput" type="email" placeholder="your@email.com"></div>
+        <div class="fgroup"><label class="flabel">Company / Organisation</label><input class="finput" type="text" placeholder="Operating company name"></div>
+        <div class="fgroup"><label class="flabel">Phone Number</label><input class="finput" type="tel" placeholder="+1 234 567 8900"></div>
+        <div class="fgroup full"><label class="flabel">Project Overview</label><textarea class="finput" rows="5" placeholder="Describe the asset, current operations, production history, resource estimate, capital requirements, and any existing offtake or partnerships..."></textarea></div>
+        <div class="fgroup full" style="margin-top:.5rem">
+          <button class="btn btn-p" style="padding:13px 32px" onclick="submitForm()">Submit Project → Enter Pipeline</button>
+        </div>
+      </div>
+    </div>
+    <div style="height:2rem"></div>
+  </div>
+</div>
+
+<!-- Sidebar overlay for mobile -->
+<div class="sidebar-overlay" id="sidebar-overlay" onclick="closeMobileNav()"></div>
+
+<!-- TOAST -->
+<div id="toast">✓ Project submitted — our team will be in touch within 3 business days.</div>
+
+<script>
+// ── NAVIGATION ──
+function nav(p){
+  document.querySelectorAll('.pg').forEach(x=>x.classList.remove('on'));
+  document.querySelectorAll('.nav-links a').forEach(x=>x.classList.remove('on'));
+  document.getElementById('pg-'+p).classList.add('on');
+  const nl=document.getElementById('nl-'+p);
+  if(nl)nl.classList.add('on');
+  window.scrollTo({top:0,behavior:'smooth'});
+  // close mobile nav
+  closeMobileNav();
+}
+
+// ── MOBILE NAV ──
+function toggleMobile(){
+  const hamburger = document.getElementById('hbg');
+  const navlinks = document.getElementById('navlinks');
+  const overlay = document.getElementById('sidebar-overlay');
+  const isOpen = navlinks.classList.contains('mobile-open');
+  
+  if (isOpen) {
+    navlinks.classList.remove('mobile-open');
+    hamburger.classList.remove('active');
+    if(overlay) overlay.classList.remove('active');
+  } else {
+    navlinks.classList.add('mobile-open');
+    hamburger.classList.add('active');
+    if(overlay) overlay.classList.add('active');
+  }
+}
+
+// Close mobile nav when clicking overlay
+function closeMobileNav(){
+  const navlinks = document.getElementById('navlinks');
+  const hamburger = document.getElementById('hbg');
+  const overlay = document.getElementById('sidebar-overlay');
+  navlinks.classList.remove('mobile-open');
+  hamburger.classList.remove('active');
+  if(overlay) overlay.classList.remove('active');
+}
+
+// ── DASHBOARD VIEWS ──
+function dash(view,el){
+  document.querySelectorAll('.dash-view').forEach(x=>x.classList.remove('on'));
+  document.querySelectorAll('.sb-item').forEach(x=>x.classList.remove('on'));
+  document.getElementById('dv-'+view).classList.add('on');
+  el.classList.add('on');
+  // close sidebar on mobile
+  if(window.innerWidth<900) {
+    document.getElementById('sidebar').classList.remove('open');
+    const overlay = document.getElementById('sidebar-overlay');
+    if(overlay) overlay.classList.remove('active');
+  }
+}
+
+// ── PIPELINE FILTER ──
+function filterPipeline(com,btn){
+  document.querySelectorAll('.fbtn').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  document.querySelectorAll('#ptbody tr').forEach(row=>{
+    row.style.display=(com==='all'||row.dataset.com===com)?'':'none';
+  });
+}
+
+// ── SUBMIT FORM ──
+function submitForm(){
+  const toast=document.getElementById('toast');
+  toast.classList.add('show');
+  setTimeout(()=>toast.classList.remove('show'),4000);
+}
+
+// ── DOC DOWNLOAD FEEDBACK ──
+document.querySelectorAll('.doc-dl').forEach(btn=>{
+  btn.addEventListener('click',function(){
+    const orig=this.textContent;
+    this.textContent='↓ Downloading…';
+    setTimeout(()=>this.textContent=orig,1500);
+  });
+});
+</script>
+</body>
+</html>
