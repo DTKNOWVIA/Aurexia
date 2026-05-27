@@ -7,7 +7,16 @@ const connectionString = process.env.DATABASE_URL;
 let servername: string | undefined;
 try {
   if (connectionString) {
-    servername = new URL(connectionString).hostname;
+    const connHost = new URL(connectionString).hostname;
+    // If connecting via Supabase pooler, SNI must be the project hostname (the direct host),
+    // not the generic pooler host. Prefer DIRECT_URL or NEXT_PUBLIC_SUPABASE_URL when available.
+    if (connHost.includes("pooler.supabase.com") && process.env.DIRECT_URL) {
+      servername = new URL(process.env.DIRECT_URL).hostname;
+    } else if (connHost.includes("pooler.supabase.com") && process.env.NEXT_PUBLIC_SUPABASE_URL) {
+      servername = new URL(process.env.NEXT_PUBLIC_SUPABASE_URL).hostname;
+    } else {
+      servername = connHost;
+    }
   }
 } catch (e) {
   // ignore
