@@ -1,63 +1,50 @@
 import { NextRequest, NextResponse } from "next/server";
+import { authenticator } from "otplib";
 import { prisma } from "@/lib/prisma";
 import { signToken } from "@/lib/auth";
 
 export async function POST(req: NextRequest) {
   try {
-    const { sessionId, code } = await req.json();
+    const { userId, code } = await req.json();
 
-    if (!sessionId || !code) {
+    if (!userId || !code) {
       return NextResponse.json(
-        { error: "Session ID and code required" },
+        { error: "User ID and code required" },
         { status: 400 }
       );
     }
 
-    // Find the MFA session
-    const mfaSession = await prisma.mFASession.findUnique({
-      where: { id: sessionId },
-      include: { user: true },
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
     });
 
-    if (!mfaSession) {
+    if (!user || !user.mfaSecret) {
       return NextResponse.json(
-        { error: "Invalid or expired session" },
+        { error: "MFA is not configured for this account" },
         { status: 401 }
       );
     }
 
-    // Check if session has expired
-    if (new Date() > mfaSession.expiresAt) {
-      await prisma.mFASession.delete({ where: { id: sessionId } });
-      return NextResponse.json(
-        { error: "MFA code has expired. Please log in again." },
-        { status: 401 }
-      );
-    }
+    const isValid = authenticator.check(code.trim(), user.mfaSecret);
 
-    // Validate code
-    if (mfaSession.code !== code.trim()) {
+    if (!isValid) {
       return NextResponse.json(
         { error: "Invalid MFA code" },
         { status: 401 }
       );
     }
 
-    // Code is valid - issue JWT token and clean up
     const token = signToken({
-      userId: mfaSession.user.id,
-      role: mfaSession.user.role,
+      userId: user.id,
+      role: user.role,
     });
-
-    // Delete the used MFA session
-    await prisma.mFASession.delete({ where: { id: sessionId } });
 
     return NextResponse.json({
       token,
       user: {
-        id: mfaSession.user.id,
-        email: mfaSession.user.email,
-        role: mfaSession.user.role,
+        id: user.id,
+        email: user.email,
+        role: user.role,
       },
     });
   } catch (error) {

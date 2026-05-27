@@ -105,8 +105,9 @@ export default function LoginPage() {
         return;
       }
 
-      setSuccess("Account created. Sending you to MFA verification...");
-      await continueToMfa(email, password);
+      sessionStorage.setItem("pendingAuth", JSON.stringify(data));
+      setSuccess("Account created. Opening authenticator setup...");
+      router.push("/mfa/setup");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
     } finally {

@@ -1,10 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
+import { authenticator } from "otplib";
 import { prisma } from "@/lib/prisma";
-
-function generateMFACode(): string {
-  return Math.floor(100000 + Math.random() * 900000).toString();
-}
 
 export async function POST(req: NextRequest) {
   try {
@@ -44,25 +41,29 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Generate MFA code (valid for 15 minutes)
-    const code = generateMFACode();
-    const expiresAt = new Date(Date.now() + 15 * 60 * 1000);
+    if (!user.mfaSecret) {
+      const secret = authenticator.generateSecret();
+      const otpauthUrl = authenticator.keyuri(email, "Aurexia", secret);
+      await prisma.user.update({
+        where: { id: user.id },
+        data: { mfaSecret: secret },
+      });
 
-    // Store MFA session
-    const mfaSession = await prisma.mFASession.create({
-      data: {
-        userId: user.id,
-        code,
-        expiresAt,
-      },
-    });
+      return NextResponse.json({
+        setupPending: true,
+        otpauthUrl,
+        user: {
+          id: user.id,
+          email: user.email,
+          role: user.role,
+        },
+      });
+    }
 
     return NextResponse.json({
       mfaPending: true,
       userId: user.id,
       email: user.email,
-      sessionId: mfaSession.id,
-      message: "MFA code sent to your authenticator app",
     });
   } catch (error) {
     console.error("Login error:", error);

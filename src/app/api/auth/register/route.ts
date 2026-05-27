@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
+import { authenticator } from "otplib";
 import { prisma } from "@/lib/prisma";
 import { verifyToken } from "@/lib/auth";
 
@@ -77,17 +78,22 @@ export async function POST(req: NextRequest) {
     }
 
     const hashedPassword = await bcrypt.hash(password, 12);
+    const secret = authenticator.generateSecret();
+    const otpauthUrl = authenticator.keyuri(email, "Aurexia", secret);
 
     const user = await prisma.user.create({
       data: {
         email,
         password: hashedPassword,
         role: requestedRole,
+        mfaSecret: secret,
       },
     });
 
     return NextResponse.json({
       message: "User created successfully",
+      setupPending: true,
+      otpauthUrl,
       user: {
         id: user.id,
         email: user.email,
