@@ -8,23 +8,58 @@ export default function MfaPage() {
   const router = useRouter();
   const [code, setCode] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  function handleVerify(e: React.FormEvent) {
+  async function handleVerify(e: React.FormEvent) {
     e.preventDefault();
-    const pending = sessionStorage.getItem("pendingAuth");
-    if (!pending) {
-      router.push("/login");
-      return;
+    setError("");
+    setLoading(true);
+
+    try {
+      const pending = sessionStorage.getItem("pendingAuth");
+      if (!pending) {
+        router.push("/login");
+        return;
+      }
+
+      const codeDigits = code.replace(/\s/g, "");
+      if (codeDigits.length < 6) {
+        setError("Enter the 6-digit verification code.");
+        setLoading(false);
+        return;
+      }
+
+      const data = JSON.parse(pending);
+
+      // Call the verify-mfa endpoint
+      const res = await fetch("/api/auth/verify-mfa", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          sessionId: data.sessionId,
+          code: codeDigits,
+        }),
+      });
+
+      const result = await res.json();
+
+      if (!res.ok) {
+        setError(result.error || "Invalid code. Please try again.");
+        setLoading(false);
+        return;
+      }
+
+      // Store token and user info
+      localStorage.setItem("token", result.token);
+      localStorage.setItem("user", JSON.stringify(result.user));
+      sessionStorage.removeItem("pendingAuth");
+
+      // Redirect to dashboard
+      router.push("/dashboard");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Something went wrong");
+      setLoading(false);
     }
-    if (code.replace(/\s/g, "").length < 6) {
-      setError("Enter the 6-digit verification code.");
-      return;
-    }
-    const data = JSON.parse(pending);
-    localStorage.setItem("token", data.token);
-    localStorage.setItem("user", JSON.stringify(data.user));
-    sessionStorage.removeItem("pendingAuth");
-    router.push("/dashboard");
   }
 
   return (
@@ -51,8 +86,22 @@ export default function MfaPage() {
         {error && <div style={{ color: "#FCA5A5", fontSize: 14, marginBottom: 16 }}>{error}</div>}
         <form onSubmit={handleVerify}>
           <label className="auth-label">Verification code</label>
-          <input className="auth-input" inputMode="numeric" value={code} onChange={(e) => setCode(e.target.value)} placeholder="000000" style={{ fontSize: 28, letterSpacing: 8, textAlign: "center", marginBottom: 22 }} />
-          <button className="btn btn-blue btn-lg" style={{ width: "100%" }}>Verify and continue</button>
+          <input 
+            className="auth-input" 
+            inputMode="numeric" 
+            value={code} 
+            onChange={(e) => setCode(e.target.value)} 
+            placeholder="000000" 
+            style={{ fontSize: 28, letterSpacing: 8, textAlign: "center", marginBottom: 22 }}
+            disabled={loading}
+          />
+          <button 
+            className="btn btn-blue btn-lg" 
+            style={{ width: "100%" }}
+            disabled={loading}
+          >
+            {loading ? "Verifying..." : "Verify and continue"}
+          </button>
         </form>
       </section>
     </main>

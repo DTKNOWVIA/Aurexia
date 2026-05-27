@@ -20,6 +20,17 @@ model User {
   notifications Notification[]
   accessLogs    AccessLog[]
   requestedJobs ReportJob[]
+  mfaSessions   MFASession[]
+}
+
+model MFASession {
+  id        String   @id @default(uuid())
+  userId    String
+  code      String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
 }
 
 model Investor {
