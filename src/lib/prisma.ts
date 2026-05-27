@@ -3,17 +3,19 @@ import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { Pool } from "pg";
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
+const connectionString = process.env.DATABASE_URL;
 let servername: string | undefined;
 try {
-  if (supabaseUrl) servername = new URL(supabaseUrl).hostname;
+  if (connectionString) {
+    servername = new URL(connectionString).hostname;
+  }
 } catch (e) {
   // ignore
 }
 
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false, servername },
+  connectionString,
+  ssl: connectionString ? { rejectUnauthorized: false, servername } : undefined,
 });
 
 const adapter = new PrismaPg(pool);
