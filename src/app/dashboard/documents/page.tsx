@@ -3,7 +3,7 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { Plus, Search, Bell, X, FileText, Download, Trash2, Upload, File } from "lucide-react";
+import { Plus, Search, Bell, X, FileText, Download, Trash2, Upload, File as FileIcon } from "lucide-react";
 import Sidebar from "@/components/Sidebar";
 
 interface User {
@@ -30,7 +30,8 @@ export default function DocumentsPage() {
   const [showModal, setShowModal] = useState(false);
   const [saving, setSaving] = useState(false);
   const [dragActive, setDragActive] = useState(false);
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [selectedFile, setSelectedFile] = useState<globalThis.File | null>(null);
+  const [uploadError, setUploadError] = useState("");
   const [form, setForm] = useState({
     assetId: "",
     investorId: "",
@@ -63,10 +64,19 @@ export default function DocumentsPage() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!selectedFile) return;
+    setUploadError("");
+    if (!selectedFile) {
+      setUploadError("Select a file before uploading.");
+      return;
+    }
+
+    const token = localStorage.getItem("token");
+    if (!token) {
+      router.push("/login");
+      return;
+    }
 
     setSaving(true);
-    const token = localStorage.getItem("token");
     try {
       const formData = new FormData();
       formData.append("file", selectedFile);
@@ -81,15 +91,20 @@ export default function DocumentsPage() {
         body: formData,
       });
 
-      if (res.ok) {
-        const data = await res.json();
-        setDocuments((prev) => [data.document, ...prev]);
-        setShowModal(false);
-        setSelectedFile(null);
-        setForm({ assetId: "", investorId: "" });
+      if (!res.ok) {
+        const errorBody = await res.json().catch(() => ({}));
+        setUploadError(errorBody.error || "Upload failed. Please try again.");
+        return;
       }
+
+      const data = await res.json();
+      setDocuments((prev) => [data.document, ...prev]);
+      setShowModal(false);
+      setSelectedFile(null);
+      setForm({ assetId: "", investorId: "" });
     } catch (err) {
       console.error(err);
+      setUploadError(err instanceof Error ? err.message : "Upload failed. Please try again.");
     } finally {
       setSaving(false);
     }

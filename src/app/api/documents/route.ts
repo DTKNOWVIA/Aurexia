@@ -4,7 +4,7 @@ import { withAuth, ROLES } from "@/lib/rbac";
 import { createClient } from "@supabase/supabase-js";
 
 function getSupabaseClient() {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL;
   const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
   if (!supabaseUrl || !serviceRoleKey) {
@@ -62,10 +62,11 @@ async function POST(req: NextRequest, payload: any) {
       );
     }
 
+    const uploadPayload = new Uint8Array(fileBuffer);
     const { data, error } = await supabase.storage
       .from("aurexia-documents")
-      .upload(fileName, fileBuffer, {
-        contentType: file.type,
+      .upload(fileName, uploadPayload, {
+        contentType: file.type || "application/octet-stream",
       });
 
     if (error) {

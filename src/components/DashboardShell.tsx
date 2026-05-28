@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useSyncExternalStore } from "react";
+import { useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import Sidebar from "./Sidebar";
@@ -21,23 +21,45 @@ export default function DashboardShell({
   children: ReactNode;
 }) {
   const router = useRouter();
-  const storedUser = useSyncExternalStore(
-    () => () => undefined,
-    () => (typeof window === "undefined" ? null : localStorage.getItem("user")),
-    () => null
-  );
-  const token = useSyncExternalStore(
-    () => () => undefined,
-    () => (typeof window === "undefined" ? null : localStorage.getItem("token")),
-    () => null
-  );
-  const user = storedUser ? (JSON.parse(storedUser) as User) : null;
+  const [user, setUser] = useState<User | null>(null);
+  const [token, setToken] = useState<string | null>(null);
+  const [initialized, setInitialized] = useState(false);
 
   useEffect(() => {
-    if (storedUser === null || token === null) {
-      router.push("/login");
+    if (typeof window === "undefined") {
+      return;
     }
-  }, [router, storedUser, token]);
+
+    const storedUser = localStorage.getItem("user");
+    const storedToken = localStorage.getItem("token");
+
+    if (!storedUser || !storedToken) {
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      router.push("/login");
+      return;
+    }
+
+    try {
+      setUser(JSON.parse(storedUser) as User);
+    } catch (error) {
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      router.push("/login");
+      return;
+    }
+
+    setToken(storedToken);
+    setInitialized(true);
+  }, [router]);
+
+  if (!initialized) {
+    return (
+      <main className="flex h-full items-center justify-center" style={{ minHeight: "100vh" }}>
+        <div className="text-gray">Loading workspace...</div>
+      </main>
+    );
+  }
 
   if (!user || !token) {
     return (
